@@ -1,69 +1,58 @@
-import { createRouter, createWebHistory } from 'vue-router'
-import { useUserStore } from '@/stores/user'
+import { createRouter, createWebHistory } from 'vue-router';
+import MainRoutes from './MainRoutes';
+import AuthRoutes from './AuthRoutes';
+import { useAuthStore } from '@/stores/auth';
+import { useUIStore } from '@/stores/ui';
 
-const router = createRouter({
+export const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
     {
-      path: '/',
-      name: 'dashboard',
-      component: () => import('@/pages/dashboard/DashboardView.vue'),
-      meta: { requiresAuth: true },
-    },
-    {
-      path: '/profile',
-      name: 'profile',
-      component: () => import('@/pages/profile/ProfileView.vue'),
-      meta: { requiresAuth: true },
-    },
-    {
-      path: '/settings',
-      name: 'settings',
-      component: () => import('@/pages/SettingsView.vue'),
-      meta: { requiresAuth: true },
-    },
-    {
-      path: '/login',
-      name: 'login',
-      component: () => import('@/pages/LoginView.vue'),
-      meta: { requiresGuest: true },
-    },
-    {
-      path: '/register',
-      name: 'register',
-      component: () => import('@/pages/RegisterView.vue'),
-      meta: { requiresGuest: true },
-    },
-    {
-      path: '/permission',
-      name: 'permission',
-      component: () => import('@/pages/PermissionView.vue'),
-    },
-    {
       path: '/:pathMatch(.*)*',
-      name: 'not-found',
-      component: () => import('@/pages/others/NotFoundView.vue'),
+      component: () => import('@/views/pages/maintenance/error/Error404Page.vue')
     },
-  ],
-})
+    MainRoutes,
+    AuthRoutes
+  ]
+});
 
-// Navigation guards
-router.beforeEach((to, from, next) => {
-  const userStore = useUserStore()
+interface User {
+  // Define the properties and their types for the user data here
+  // For example:
+  id: number;
+  name: string;
+}
 
-  // Check if route requires authentication
-  if (to.meta.requiresAuth && !userStore.isAuthenticated) {
-    next('/login')
-    return
+// Assuming you have a type/interface for your authentication store
+interface AuthStore {
+  user: User | null;
+  returnUrl: string | null;
+  login(username: string, password: string): Promise<void>;
+  logout(): void;
+}
+
+router.beforeEach(async (to, from, next) => {
+  // redirect to login page if not logged in and trying to access a restricted page
+  const publicPages = ['/auth/login1'];
+  const authRequired = !publicPages.includes(to.path);
+  const auth: AuthStore = useAuthStore();
+
+  if (to.matched.some((record) => record.meta.requiresAuth)) {
+    if (authRequired && !auth.user) {
+      auth.returnUrl = to.fullPath;
+      return next('/auth/login1');
+    } else next();
+  } else {
+    next();
   }
+});
 
-  // Check if route requires guest (not authenticated)
-  if (to.meta.requiresGuest && userStore.isAuthenticated) {
-    next('/')
-    return
-  }
+router.beforeEach(() => {
+  const uiStore = useUIStore();
+  uiStore.isLoading = true;
+});
 
-  next()
-})
-
-export default router
+router.afterEach(() => {
+  const uiStore = useUIStore();
+  uiStore.isLoading = false;
+});

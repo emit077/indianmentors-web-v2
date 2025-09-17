@@ -1,303 +1,144 @@
-# Indian Mentors Web Application
+# Able Pro Free Vue Vuetify Dashboard Template [![Tweet](https://img.shields.io/twitter/url/http/shields.io.svg?style=social)](https://twitter.com/intent/tweet?text=Get%20Able%20%20Pro%20React%20-%20The%20most%20beautiful%20Material%20Designed%20Admin%20Dashboard%20Template%20&url=https://ableproadmin.com/react/&via=phoenixcoded&hashtags=React,webdev,developers,javascript)
 
-A comprehensive Vue 3 application built with modern web technologies, featuring a complete mentoring platform with PWA capabilities, real-time notifications, and location-based services.
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Price](https://img.shields.io/badge/price-FREE-0098f7.svg)](https://github.com/codedthemes/able-pro-free-admin-dashboard-template/blob/master/LICENSE)
 
-## 🚀 Features
+Able Pro is a free vue vuetify admin dashboard template built with Vue. It is designed to offer an exceptional User Experience, with a wide range of customizable and feature-rich pages. Able Pro serves as a comprehensive Dashboard Template, boasting a user-friendly and responsive design that adapts seamlessly to retina screens as well as laptops.
 
-- **Vue 3 with Composition API** - Modern reactive framework
-- **Vuetify 3** - Material Design component library with custom theming
-- **Pinia** - State management with TypeScript support
-- **Vue Router** - Client-side routing with lazy loading
-- **Axios** - HTTP client with interceptors and error handling
-- **PWA Support** - Service worker, offline functionality, and app installation
-- **Web Notifications** - Push notifications with permission handling
-- **Location Services** - Geolocation with permission management
-- **Dark/Light Theme** - Customizable theme switching
-- **TypeScript** - Full type safety and IntelliSense support
+:star: :star: :star: Do not forget to star (Top right of this page) it if you like the Able Pro :star: :star: :star:
 
-## 📁 Project Structure
+![IMG_8566.jpg](https://org-public-assets.s3.us-west-2.amazonaws.com/Free-Version-Banners/GITHUB-FREE-VUE-REPO+-+Able+pro+admin.jpg)
+
+Looking for even more features? Check out Able Pro's Vue [premium version](https://1.envato.market/B0JAPW), which offers an even wider array of pages, features, and layouts than the free version, providing you with the ultimate in customization and control.
+
+| [Able-pro Free](https://ableproadmin.com/vue/free) | [Able-Pro Pro Version](https://1.envato.market/B0JAPW)                                                   |
+| --------------------------------------------------------- | :-------------------------------------------------------------------------------------------------------- |
+| **7** Demo pages                                          | **100+** pages                                                                                            |
+| -                                                         | ✓ Modern UserInterface & Easy Developer Experience                                                        |
+| -                                                         | ✓ Preset Dark/Light Color  🌓                                                                                          |
+| -                                                         | ✓ Vuetify Components                                                                                  |
+| -                                                         | ✓ Design files [Figma](https://links.codedthemes.com/mQZrX)                                               |
+| -                                                         | ✓ 10+ color Presets                                                                                       |
+| -                                                         | ✓ Vertical/Horizontal etc...Layouts                                                           |
+| -                                                         | ✓ Advance Components                                                                                      |
+| -                                                         | ✓ Form Variants                                                                                           |
+| -                                                         | ✓ Table Variants                                                                                          |
+| -                                                         | ✓ 7+ Conceptual Apps                                                                                      |
+| -                                                         | ✓ Front Pages                                                                                             |
+
+## About Able-pro Vue Admin Dashboard Template?
+
+Welcome to Able Pro, the ultimate free Vue Dashboard Template powered by the Vuetify components library. With its modern design interface and flexible developer experience, Able Pro is the perfect solution for creating stunning and feature-rich admin dashboards. Whether you're a beginner or an experienced developer, this template offers a seamless and intuitive workflow, allowing you to easily customize and build beautiful user interfaces. Experience the power of Able Pro and elevate your web application to new heights.
+
+- Modern UI design
+- Vuetify UI component
+- Fully Responsive, all modern browser supported
+- Easy to use code structure
+- Flexible & High-Performance code
+- Easy Documentation Guide
+
+## Able Pro Free version
+
+#### Preview
+
+- [Preview](https://ableproadmin.com/vue/free)
+
+#### Download
+
+- [Download from GitHub](https://github.com/phoenixcoded/able-pro-free-admin-dashboard-template)
+
+## Able Pro Premium version
+
+#### Preview
+
+- [Preview](https://ableproadmin.com/vue/)
+
+#### Purchase
+
+- [Buy Now](https://1.envato.market/B0JAPW)
+
+## Table of contents
+
+- [Getting Started](#getting-started)
+- [Documentation](#documentation)
+- [Technology Stack](#technology-stack)
+- [Author](#author)
+- [Issues?](#issues)
+- [License](#license)
+- [More Free Angular Templates](#more-free-angular-dashboard-templates)
+- [More Pro Angular Templates](#more-premium-angular-dashboard-templates)
+- [Follow us](#follow-us)
+
+## Getting Started
+
+1. Clone from Github
 
 ```
-src/
-├── components/          # Reusable Vue components
-│   ├── AppLayout.vue   # Main application layout
-│   └── PWAUpdatePrompt.vue # PWA update notifications
-├── plugins/            # Plugin configurations
-│   └── vuetify.ts     # Vuetify theme and configuration
-├── router/             # Vue Router configuration
-│   └── index.ts       # Routes with lazy loading and guards
-├── services/           # API and external services
-│   ├── api.ts         # Axios configuration with interceptors
-│   ├── userService.ts # User-related API calls
-│   └── pwaService.ts  # PWA update and offline handling
-├── stores/             # Pinia stores for state management
-│   ├── user.ts        # User authentication and profile
-│   ├── theme.ts       # Theme switching (light/dark)
-│   ├── notifications.ts # Notification management
-│   └── location.ts    # Geolocation services
-├── views/              # Page components
-│   ├── DashboardView.vue    # Main dashboard
-│   ├── ProfileView.vue      # User profile management
-│   ├── SettingsView.vue     # Application settings
-│   ├── LoginView.vue        # User authentication
-│   ├── RegisterView.vue     # User registration
-│   ├── PermissionView.vue   # Location permission request
-│   └── NotFoundView.vue     # 404 error page
-├── assets/             # Static assets
-├── App.vue            # Root component
-└── main.ts            # Application entry point
+git clone https://github.com/phoenixcoded/able-pro-free-admin-dashboard-template.git
 ```
 
-## 🛠️ Installation & Setup
+2. Install packages
 
-### Prerequisites
+```
+npm
+```
 
-- Node.js (v18.20.5 or higher recommended)
-- npm or yarn package manager
+3. Run project
 
-### Installation
-
-1. **Clone the repository**
-
-   ```bash
-   git clone <repository-url>
-   cd IndianMentorsWeb
-   ```
-
-2. **Install dependencies**
-
-   ```bash
-   npm install
-   ```
-
-3. **Environment Configuration**
-   Create a `.env` file in the root directory:
-   ```env
-   VITE_API_BASE_URL=https://your-api-endpoint.com
-   VITE_APP_NAME=Indian Mentors
-   ```
-
-### Development
-
-```bash
-# Start development server
+```
 npm run dev
-
-# Type checking
-npm run type-check
-
-# Linting
-npm run lint
-
-# Format code
-npm run format
 ```
 
-### Production Build
+## Documentation
 
-```bash
-# Build for production
-npm run build
+[Able-pro documentation](https://phoenixcoded.gitbook.io/able-pro/v/vue/) helps you with installation, deployment, and troubleshooting.
 
-# Preview production build
-npm run preview
-```
+## Technology Stack
 
-## 🎨 Theming & Customization
+- Vue 3
+- TypeScript
+- Vuetify
+- Vue Router
+- Auth0, JWT (i.e. Pro version)
+- Vee validate
+- Vue-i18n
+- Apex Charts
+- Axios
+- Vue3 easy datatable
+- npm package installer
 
-### Vuetify Theme Configuration
+## Author
 
-The application includes custom light and dark themes defined in `src/plugins/vuetify.ts`:
+Able-pro is developed by Team [Phoenixcoded](https://themeforest.net/user/phoenixcoded).
+Able-pro is managed by Team [CodedThemes](https://codedthemes.com).
 
-- **Primary Color**: #1976D2 (Light) / #2196F3 (Dark)
-- **Secondary Color**: #424242
-- **Custom accent colors** for different UI states
 
-### Theme Switching
+## Issues
 
-Users can toggle between light and dark themes using:
+To report a bug, please submit an [issue](https://github.com/codedthemes/able-pro-free-admin-dashboard-template/issues) on Github. We will respond as soon as possible to resolve the issue.
 
-- Theme toggle button in the app bar
-- Settings page theme controls
-- Automatic system preference detection
+## License
 
-## 🔐 Authentication & State Management
+- Licensed cover under MIT
 
-### User Store (Pinia)
+## Able Pro is Available in Following Technologies
 
-The user store manages:
+- [Bootstrap 5](https://themeforest.net/item/able-pro-bootstrap-admin-dashboard-template/50170229)
+- [React MUI (Material-UI)](https://themeforest.net/item/able-pro-react-nextjs-admin-dashboard/50613770)
+- [CodeIgniter](https://themeforest.net/item/able-pro-responsive-bootstrap-4-admin-template/19300403)
+- [Asp.net](https://themeforest.net/item/able-pro-responsive-bootstrap-4-admin-template/19300403)
+- [Angular](https://themeforest.net/item/able-pro-angular-dashboard-template/50607360)
+- [NextJS](https://themeforest.net/item/able-pro-react-nextjs-admin-dashboard/50613770)
 
-- Authentication state
-- User profile data
-- Location information
-- Loading and error states
+## More Free Vue Admin Templates
 
-### API Integration
+- [Free Berry](https://github.com/codedthemes/berry-free-vuetify-vuejs-admin-template)
+- [Free Mantis](https://github.com/codedthemes/mantis-free-vuetify-vuejs-admin-template)
 
-- **Axios interceptors** for automatic token handling
-- **Error handling** with user-friendly messages
-- **Request/response logging** for debugging
-- **Automatic retry** for failed requests
+## Follow us
 
-## 📱 PWA Features
-
-### Service Worker
-
-- **Automatic updates** with user notification
-- **Offline caching** for core app functionality
-- **Background sync** for data synchronization
-- **Push notifications** support
-
-### Installation
-
-Users can install the app on their devices:
-
-- **Desktop**: Browser install prompt
-- **Mobile**: Add to home screen
-- **Standalone mode** with custom app icons
-
-## 🔔 Notifications
-
-### Web Notifications API
-
-- **Permission request** with user-friendly UI
-- **In-app notification panel** with read/unread status
-- **Browser push notifications** for important updates
-- **Notification history** and management
-
-### Notification Types
-
-- System updates
-- Location changes
-- User interactions
-- Error alerts
-
-## 📍 Location Services
-
-### Geolocation Features
-
-- **Permission management** with full-screen prompts
-- **High-accuracy positioning** with fallback options
-- **Location watching** for real-time updates
-- **Error handling** with user-friendly messages
-
-### Location Use Cases
-
-- Find nearby mentors/mentees
-- Location-based notifications
-- Meeting scheduling
-- Community features
-
-## 🚦 Routing & Navigation
-
-### Route Structure
-
-- `/` - Dashboard (requires authentication)
-- `/profile` - User profile management
-- `/settings` - Application settings
-- `/login` - User authentication
-- `/register` - User registration
-- `/permission` - Location permission request
-- `/*` - 404 error page
-
-### Route Guards
-
-- **Authentication guards** for protected routes
-- **Guest-only routes** for login/register
-- **Permission checks** for location-based features
-
-## 🔧 API Configuration
-
-### Base Configuration
-
-```typescript
-// src/services/api.ts
-const api = axios.create({
-  baseURL: import.meta.env.VITE_API_BASE_URL,
-  timeout: 10000,
-  headers: {
-    'Content-Type': 'application/json',
-  },
-})
-```
-
-### Interceptors
-
-- **Request interceptor**: Adds authentication tokens
-- **Response interceptor**: Handles errors and logging
-- **Error handling**: User-friendly error messages
-
-## 📊 Sample Data & Demo
-
-The application includes sample data for demonstration:
-
-- **Dashboard analytics** with progress indicators
-- **Sample API calls** to JSONPlaceholder
-- **Mock user data** for testing
-- **Notification examples**
-
-## 🧪 Testing
-
-```bash
-# Run unit tests
-npm run test
-
-# Run e2e tests
-npm run test:e2e
-
-# Coverage report
-npm run test:coverage
-```
-
-## 📦 Build & Deployment
-
-### Production Build
-
-```bash
-npm run build
-```
-
-### Deployment Options
-
-- **Static hosting** (Netlify, Vercel, GitHub Pages)
-- **CDN deployment** for global distribution
-- **Docker containerization** for server deployment
-
-### Environment Variables
-
-```env
-VITE_API_BASE_URL=https://api.indianmentors.com
-VITE_APP_NAME=Indian Mentors
-VITE_APP_VERSION=1.0.0
-```
-
-## 🤝 Contributing
-
-1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
-
-## 📄 License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
-## 🆘 Support
-
-For support and questions:
-
-- Create an issue in the repository
-- Contact the development team
-- Check the documentation wiki
-
-## 🔄 Version History
-
-- **v1.0.0** - Initial release with core features
-- **v1.1.0** - Added PWA support and notifications
-- **v1.2.0** - Enhanced location services and theming
-
----
-
-Built with ❤️ using Vue 3, Vuetify, and modern web technologies.
-# indianmentors-web-v2
+- [Website](https://ableproadmin.com/vue)
+- [Phoenixcoded](https://themeforest.net/user/phoenixcoded)
+- [Dribbble](https://dribbble.com/codedthemes)
+- [Facebook](https://www.facebook.com/codedthemes)
+- [Twitter](https://twitter.com/codedthemes)
