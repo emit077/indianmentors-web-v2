@@ -4,7 +4,7 @@ const MainRoutes = {
     requiresAuth: true
   },
   redirect: '/main',
-  component: () => import('@/layouts/dashboard/DashboardLayout.vue'),
+  component: () => import('@/layouts/admin/AdminLayout.vue'),
   children: [
     {
       name: 'Landingpage',
@@ -35,6 +35,11 @@ const MainRoutes = {
       name: 'Shadows',
       path: '/utils/shadows',
       component: () => import('@/views/utilities/shadows/ShadowPage.vue')
+    },
+    {
+      name: 'Icons',
+      path: '/utils/icons',
+      component: () => import('@/views/utilities/icons/IconsPage.vue')
     }
   ]
 };

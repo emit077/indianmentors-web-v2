@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { shallowRef } from 'vue';
 import { useCustomizerStore } from '../../../stores/customizer';
-import sidebarItems from './sidebarItem';
+import sidebarItems from '../../../configs/drawer/admin_drawer';
 
 import NavGroup from './NavGroup/NavGroup.vue';
 import NavItem from './NavItem/NavItem.vue';
@@ -20,7 +20,7 @@ const sidebarMenu = shallowRef(sidebarItems);
     elevation="0"
     rail-width="90"
     mobile-breakpoint="lg"
-    width="220"
+    width="280"
     app
     class="leftSidebar"
     :rail="customizer.mini_sidebar"
@@ -52,11 +52,11 @@ const sidebarMenu = shallowRef(sidebarItems);
       <div class="pa-4">
         <ExtraBox />
       </div>
+      <div class="justify-center text-center">
+        <v-chip size="small" color="primary" variant="tonal"> v1.0.0 (Beta) </v-chip>
+      </div>
     </perfect-scrollbar>
   </v-navigation-drawer>
 </template>
 
-<style>
-
-
-</style>
+<style></style>

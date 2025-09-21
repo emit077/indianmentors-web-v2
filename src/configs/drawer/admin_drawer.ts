@@ -22,6 +22,53 @@ const sidebarItem: menu[] = [
     icon: 'custom-home-trend',
     to: '/dashboard/default'
   },
+  {
+    title: 'Subscriptions',
+    icon: 'custom-flag',
+    to: '/dashboard/',
+    children: [
+      {
+        title: 'Subscriptions Plan',
+        icon: 'custom-home-trend',
+        to: '/dashboard/subscriptions/plan'
+      },
+      {
+        title: 'Subscriptions History',
+        icon: 'custom-home-trend',
+        to: '/dashboard/subscriptions/history'
+      }
+    ]
+  },
+  {
+    title: 'Students',
+    icon: 'custom-user-1',
+    to: '/dashboard/students'
+  },
+  {
+    title: 'Mentors',
+    icon: 'custom-users',
+    to: '/dashboard/mentors'
+  },
+  {
+    title: 'Teams',
+    icon: 'custom-user-add',
+    to: '/dashboard/teams'
+  },
+  {
+    title: 'Payments',
+    icon: 'custom-inr-square',
+    to: '/dashboard/payments'
+  },
+  {
+    title: 'Payouts',
+    icon: 'custom-wallet',
+    to: '/dashboard/payouts'
+  },
+  {
+    title: 'Support',
+    icon: 'custom-chat',
+    to: '/dashboard/support'
+  },
   { header: 'Utilities' },
   {
     title: 'Typography',
@@ -37,6 +84,11 @@ const sidebarItem: menu[] = [
     title: 'Shadows',
     icon: 'custom-shadow',
     to: '/utils/shadows'
+  },
+  {
+    title: 'Icons',
+    icon: 'custom-shapes',
+    to: '/utils/icons'
   },
   { header: 'Pages' },
   {

@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import { RouterView } from "vue-router";
 import LoaderWrapper from "./LoaderWrapper.vue";
-import NavigationDrawer from "@/layouts/dashboard/navigation_drawer/NavigationDrawer.vue";
-import AppBar from "@/layouts/dashboard/app_bar/AppBar.vue";
-import FooterPanel from "@/layouts/dashboard/footer/FooterPanel.vue";
+import NavigationDrawer from "./drawer/NavigationDrawer.vue";
+import AppBar from "./header/AppBar.vue";
+import FooterPanel from "./footer/FooterPanel.vue";
 import { useCustomizerStore } from "../../stores/customizer";
 const customizer = useCustomizerStore();
 </script>

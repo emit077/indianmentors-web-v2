@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import Logo from '@/layouts/dashboard/logo/LogoMain.vue';
+import Logo from '@/layouts/admin/logo/LogoMain.vue';
 import AuthLogin from '../authForms/AuthLogin.vue';
 // assets
 import facebookImg from '@/assets/images/icons/facebook.svg';
