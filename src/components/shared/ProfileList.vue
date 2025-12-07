@@ -10,7 +10,7 @@ const props = defineProps<{
 </script>
 
 <template>
-  <v-card flat variant="outlined" class="mt-5 pa-2">
+  <v-card flat variant="outlined" class="mt-5 pa-2" style="background-color: white">
     <v-row no-gutters>
       <v-col
         v-for="(item, i) in props.config"

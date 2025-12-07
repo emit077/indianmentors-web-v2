@@ -11,7 +11,7 @@ const props = defineProps<{
 
 <template>
   <!-- {{ props.data }} -->
-  <v-card flat variant="outlined" class="mt-5 pa-2">
+  <v-card flat variant="outlined" class="mt-5 pa-2" style="background-color: white">
     <!-- {{ props.config }} -->
     <v-row class="" no-gutters>
       <v-col class="pa-3" :class="con.className" v-for="(con, i) in props.config" key="i">

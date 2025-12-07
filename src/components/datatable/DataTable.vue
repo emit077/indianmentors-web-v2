@@ -1,6 +1,6 @@
 <template>
   <!-- Table Header with Search -->
-  <div v-if="showSearch" class="flex-grow-1" style="max-width: 100%; width: 100%">
+  <!-- <div v-if="showSearch" class="flex-grow-1" style="max-width: 100%; width: 100%">
     <v-row class="mb-5 justify-end align-center">
       <v-col cols="12" md="4" class="pr-0">
         <v-text-field
@@ -49,10 +49,9 @@
           </v-btn>
         </slot>
       </v-col>
-      <!-- slot for the custome action btn like export filter etc -->
     </v-row>
   </div>
-  <v-divider v-if="showSearch || showHeader" />
+  <v-divider v-if="showSearch || showHeader" /> -->
 
   <!-- Data Table -->
   <v-data-table-server
@@ -68,7 +67,7 @@
     :show-select="showSelect"
     :show-expand="showExpand"
     hide-default-footer
-    class="data-table"
+    class="data-table mt-5"
     @update:options="handleOptionsUpdate"
     @click:row="handleRowClick"
   >

@@ -6,11 +6,18 @@ import {
   mdiTableLarge,
   mdiListBoxOutline,
   mdiAccountBoxOutline,
+  mdiTrayArrowDown,
+  mdiTuneVariant,
 } from "@mdi/js";
 import ProfileCard from "@/components/shared/ProfileCard.vue";
 import ProfileList from "@/components/shared/ProfileList.vue";
-// import profileCardConfig from "@/configs/student/student_list";
-import { profileCardConfig, profileListConfig } from "@/configs/student/student_list";
+import DataTable from "@/components/datatable/DataTable.vue";
+
+import {
+  profileCardConfig,
+  profileListConfig,
+  headers,
+} from "@/configs/student/student_list";
 
 // Student data interface
 interface Student {
@@ -47,7 +54,7 @@ interface Student {
 const studentList = ref<Student[]>([]);
 const loading = ref(false);
 const searchQuery = ref("");
-const tab = ref("list");
+const tab = ref("table");
 
 // Sample data for demonstration
 const sampleData: Student[] = [
@@ -1001,44 +1008,82 @@ onMounted(() => {
         </div>
       </v-col>
     </v-row>
-    home
-    <v-icon icon="$filter" />
 
     <!-- Search and Filter Section -->
     <v-row class="mb-4">
-      <v-col cols="12" md="6">
+      <v-col cols="12" md="4">
         <v-text-field
           v-model="searchQuery"
-          prepend-inner-icon="mdi-magnify"
-          label="Search students..."
+          placeholder="Search students..."
           variant="outlined"
-          density="comfortable"
           clearable
           hide-details
-        />
+        >
+          <template v-slot:prepend-inner>
+            <div class="text-lightText d-flex align-center">
+              <SvgSprite name="custom-search" style="width: 16px; height: 16px" />
+            </div>
+          </template>
+        </v-text-field>
       </v-col>
-      <v-col cols="12" md="6" class="d-flex align-center justify-end gap-2">
-        <v-chip :color="studentList.length > 0 ? 'success' : 'default'" variant="tonal">
-          Total: {{ studentList.length }}
-        </v-chip>
-        <v-chip :color="filteredStudents.length > 0 ? 'info' : 'default'" variant="tonal">
-          Showing: {{ filteredStudents.length }}
-        </v-chip>
+      <v-col cols="12" md="8" class="justify-end d-flex pr-0">
+        <slot name="tableController">
+          <v-btn
+            class="hidden-md-and-down mr-2 ml-0"
+            color="primary"
+            :icon="mdiTuneVariant"
+            aria-label="sidebar button"
+            rounded="sm"
+            variant="tonal"
+          >
+          </v-btn>
+          <v-btn
+            class="hidden-md-and-down mr-5 ml-0"
+            color="primary"
+            aria-label="sidebar button"
+            rounded="sm"
+            variant="tonal"
+            :icon="mdiTrayArrowDown"
+          >
+          </v-btn>
+        </slot>
       </v-col>
     </v-row>
     <!--  -->
 
     <div>
       <v-btn-toggle v-model="tab" border color="primary" variant="text">
+        <v-btn value="table" :icon="mdiTableLarge"></v-btn>
         <v-btn value="list" :icon="mdiListBoxOutline"></v-btn>
         <v-btn value="card" :icon="mdiAccountBoxOutline"></v-btn>
-        <v-btn value="table" :icon="mdiTableLarge"></v-btn>
       </v-btn-toggle>
     </div>
 
     <v-tabs-window v-model="tab">
       <v-tabs-window-item :value="'table'">
-        <div></div>
+        <DataTable
+          :headers="headers"
+          :items="sampleData"
+          total-items="20"
+          :loading="loading"
+          items-per-page="20"
+          :search="searchQuery"
+          item-value="user_table_id"
+          search-placeholder="Search students..."
+          no-data-message="No students found. Try adjusting your search criteria or add your first student."
+        >
+          <!-- @update:items-per-page="(v) => (itemsPerPage = v)"
+          @update:search="(v) => (searchQuery = v)"
+          @action="handleAction" -->
+          <template #item.class_name="{ item }">
+            <div>
+              <div class="text-body-2 font-weight-medium">{{ item.class_name }}</div>
+              <div class="text-caption text-medium-emphasis">
+                {{ item.education_board?.toUpperCase() || "" }}
+              </div>
+            </div>
+          </template>
+        </DataTable>
       </v-tabs-window-item>
       <v-tabs-window-item :value="'list'">
         <!-- Profile list UI -->
