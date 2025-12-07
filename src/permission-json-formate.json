@@ -1,0 +1,37 @@
+{
+  "user": {
+    "id": 12,
+    "username": "john_doe",
+    "full_name": "John Doe",
+    "email": "john@example.com",
+    "roles": [
+      "Manager",
+      "FinanceApprover"
+    ],
+    "permissions": {
+      "pages": {
+        "dashboard": {
+          "name": "Dashboard",
+          "actions": [
+            "view"
+          ]
+        },
+        "projects": {
+          "name": "Projects",
+          "actions": [
+            "view",
+            "create",
+            "edit",
+            "approve"
+          ]
+        },
+        "finance": {
+          "name": "Finance",
+          "actions": [
+            "view_budget"
+          ]
+        }
+      }
+    }
+  }
+}

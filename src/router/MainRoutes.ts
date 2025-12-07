@@ -40,6 +40,16 @@ const MainRoutes = {
       name: 'Icons',
       path: '/utils/icons',
       component: () => import('@/views/utilities/icons/IconsPage.vue')
+    },
+    {
+      name: 'StudentList',
+      path: '/students/',
+      component: () => import('@/views/student/StudentList.vue')
+    },
+    {
+      name: 'StudentProfile',
+      path: '/students/profile',
+      component: () => import('@/views/student/StudentProfile.vue')
     }
   ]
 };

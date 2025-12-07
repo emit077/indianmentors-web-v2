@@ -32,6 +32,10 @@
 
     .v-list-item--one-line {
       &.v-list-item--active {
+        border-right: 4px solid rgb(var(--v-theme-primary));
+        // background-color: rgb(var(--v-theme-primary)) !important;
+        // color: #fff !important;
+
         .text-lightText {
           color: rgb(var(--v-theme-primary)) !important;
         }
@@ -125,6 +129,7 @@
 
     &.v-list-item--active {
       .v-list-item-title {
+        // color: #fff !important;
         color: rgb(var(--v-theme-primary));
       }
     }

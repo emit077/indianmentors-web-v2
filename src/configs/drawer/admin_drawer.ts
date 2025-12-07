@@ -42,7 +42,7 @@ const sidebarItem: menu[] = [
   {
     title: 'Students',
     icon: 'custom-user-1',
-    to: '/dashboard/students'
+    to: '/students'
   },
   {
     title: 'Mentors',

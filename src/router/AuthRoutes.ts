@@ -26,6 +26,11 @@ const AuthRoutes = {
       component: () => import('@/views/authentication/auth1/ResetPwd1.vue')
     },
     {
+      name: 'Google Callback',
+      path: '/auth/google/callback',
+      component: () => import('@/views/authentication/authForms/GoogleCallback.vue')
+    },
+    {
       name: 'Error 404',
       path: '/pages/error',
       component: () => import('@/views/pages/maintenance/error/Error404Page.vue')

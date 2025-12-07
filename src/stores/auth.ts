@@ -24,10 +24,49 @@ export const useAuthStore = defineStore({
       // redirect to previous url or default to home page
       router.push(this.returnUrl || '/dashboard/default');
     },
-    logout() {
+    
+    async loginWithGoogle(googleUser: any) {
+      try {
+        // Store Google user data
+        this.user = googleUser;
+        localStorage.setItem('user', JSON.stringify(googleUser));
+        
+        // Redirect to dashboard
+        router.push(this.returnUrl || '/dashboard/default');
+        
+        return { success: true, user: googleUser };
+      } catch (error) {
+        console.error('Google login error:', error);
+        throw error;
+      }
+    },
+    
+    async logout() {
+      // If user logged in with Google, sign out from Google as well
+      if (this.user?.provider === 'google') {
+        try {
+          // Sign out from Google
+          if (window.google && window.google.accounts) {
+            window.google.accounts.id.disableAutoSelect();
+          }
+        } catch (error) {
+          console.error('Google sign out error:', error);
+        }
+      }
+      
       this.user = null;
       localStorage.removeItem('user');
       router.push('/auth/login1');
+    },
+    
+    // Check if user is authenticated
+    isAuthenticated() {
+      return !!this.user;
+    },
+    
+    // Get user info
+    getUser() {
+      return this.user;
     }
   }
 });

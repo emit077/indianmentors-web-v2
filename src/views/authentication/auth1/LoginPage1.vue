@@ -1,10 +1,23 @@
 <script setup lang="ts">
+import { ref } from 'vue';
 import Logo from '@/layouts/admin/logo/LogoMain.vue';
 import AuthLogin from '../authForms/AuthLogin.vue';
+import LoginWithGoogle from '../authForms/LoginWithGoogle.vue';
 // assets
 import facebookImg from '@/assets/images/icons/facebook.svg';
 import twitterImg from '@/assets/images/icons/twitter.svg';
 import googleImg from '@/assets/images/icons/google.svg';
+
+// Google login event handlers
+const handleGoogleSuccess = (user: any) => {
+  console.log('Google login successful:', user);
+  // The LoginWithGoogle component handles the redirect automatically
+};
+
+const handleGoogleError = (error: string) => {
+  console.error('Google login error:', error);
+  // Error is already displayed in the LoginWithGoogle component
+};
 </script>
 
 <template>
@@ -23,6 +36,9 @@ import googleImg from '@/assets/images/icons/google.svg';
                 <v-card-text class="pa-sm-10 pa-6">
                   <div class="text-center">
                     <Logo class="mb-5" />
+                    <!-- Google Login Component -->
+                    <LoginWithGoogle @success="handleGoogleSuccess" @error="handleGoogleError" class="mb-4" />
+
                     <v-list aria-label="social list" aria-busy="true">
                       <v-list-item color="secondary" variant="tonal" href="#" rounded="md" class="mb-2">
                         <v-img
@@ -45,17 +61,6 @@ import googleImg from '@/assets/images/icons/google.svg';
                           height="13"
                         />
                         Sign in with twitter
-                      </v-list-item>
-                      <v-list-item color="secondary" variant="tonal" href="#" rounded="md" class="mb-2">
-                        <v-img
-                          :src="googleImg"
-                          alt="social icon"
-                          class="mr-2 d-inline-flex"
-                          style="vertical-align: text-top"
-                          width="16"
-                          height="16"
-                        />
-                        Sign in with google
                       </v-list-item>
                     </v-list>
                     <v-row>

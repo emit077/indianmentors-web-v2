@@ -22,9 +22,9 @@ html {
   border-color: rgb(var(--v-theme-borderLight));
 }
 
-.v-table > .v-table__wrapper > table > thead > tr > th {
-  color: inherit;
-}
+// .v-table > .v-table__wrapper > table > thead > tr > th {
+//   color: inherit;
+// }
 
 .link-hover {
   text-decoration: unset;
@@ -71,23 +71,23 @@ header {
 }
 
 // table css
-.v-table {
-  &.v-table--hover {
-    > .v-table__wrapper {
-      > table {
-        > tbody {
-          > tr {
-            &:hover {
-              td {
-                background: rgb(var(--v-theme-containerBg));
-              }
-            }
-          }
-        }
-      }
-    }
-  }
-}
+// .v-table {
+//   &.v-table--hover {
+//     > .v-table__wrapper {
+//       > table {
+//         > tbody {
+//           > tr {
+//             &:hover {
+//               td {
+//                 background: rgb(var(--v-theme-containerBg));
+//               }
+//             }
+//           }
+//         }
+//       }
+//     }
+//   }
+// }
 
 // accordion page css
 .v-expansion-panel {

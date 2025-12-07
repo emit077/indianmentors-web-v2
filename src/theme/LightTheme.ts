@@ -10,10 +10,10 @@ const DefaultTheme: ThemeTypes = {
     'card-shadow': '0px 8px 24px rgba(19, 25, 32, 0.08)'
   },
   colors: {
-    primary: '#3256C1', // '#4680FF',
+    primary: '#3e78ff',//'#042390',// '#3256C1', // '#4680FF',
     secondary: '#5B6B79',
     info: '#3ec9d6',
-    success: '#2ca87f',
+    success: '#43A047',//'#2ca87f',
     warning: '#e58a00',
     error: '#dc2626',
     lightprimary: '#E9F0FF',

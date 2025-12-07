@@ -3,6 +3,7 @@ import { createPinia } from 'pinia';
 import App from './App.vue';
 import { router } from './router';
 import vuetify from './plugins/vuetify';
+import globals from './plugins/globals';
 
 import '@/scss/style.scss';
 import { PerfectScrollbarPlugin } from 'vue3-perfect-scrollbar';
@@ -43,4 +44,5 @@ app.component('SvgSprite', SvgSprite);
 app.use(createPinia());
 app.use(VueTablerIcons);
 app.use(VueApexCharts);
+app.use(globals);
 app.use(vuetify).mount('#app');

@@ -24,11 +24,12 @@ const customizer = useCustomizerStore();
       <AppBar />
 
       <v-main class="page-wrapper">
-        <v-container fluid>
+        <v-container fluid class="px-0">
           <div>
             <!-- Loader start -->
             <LoaderWrapper />
             <!-- Loader end -->
+            <ComponentTitle></ComponentTitle>
             <RouterView />
           </div>
         </v-container>

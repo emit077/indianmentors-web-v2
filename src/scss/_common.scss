@@ -1,0 +1,10 @@
+.word-break{word-break: break-all;}
+
+.rotate-180{transform: rotate(180deg);}
+
+.text-truncate{
+    display: block;
+    overflow: hidden;
+    text-overflow: ellipsis !important;
+    white-space: nowrap;
+}
