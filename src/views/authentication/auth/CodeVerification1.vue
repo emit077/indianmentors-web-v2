@@ -1,5 +1,21 @@
 <script setup lang="ts">
+import { computed } from 'vue';
+import { useAuthStore } from '@/stores/auth';
 import AuthCodeVerification from '../authForms/AuthCodeVerification.vue';
+
+const authStore = useAuthStore();
+
+// Get masked mobile number from store
+const maskedMobileNumber = computed(() => {
+  const pendingLogin = authStore.pendingLogin || JSON.parse(sessionStorage.getItem('pendingLogin') || '{}');
+  return pendingLogin.masked_phone || pendingLogin.phone || '';
+});
+
+// Determine if it's mobile login
+const isMobileLogin = computed(() => {
+  const pendingLogin = authStore.pendingLogin || JSON.parse(sessionStorage.getItem('pendingLogin') || '{}');
+  return !!(pendingLogin.phone || pendingLogin.masked_phone);
+});
 </script>
 
 <template>
@@ -17,10 +33,15 @@ import AuthCodeVerification from '../authForms/AuthCodeVerification.vue';
               <v-card elevation="0" variant="outlined" rounded="md" class="loginBox bg-surface">
                 <v-card-text class="pa-sm-9 pa-6">
                   <h3 class="text-h3 mb-2">Enter Verification Code</h3>
-                  <p class="text-h6 text-lightText">We send you on mail.</p>
+                  <p class="text-h6 text-lightText">
+                    <template v-if="isMobileLogin && maskedMobileNumber">
+                      We sent you a verification code via SMS on <strong>{{ maskedMobileNumber }}</strong>
+                    </template>
+                    <template v-else> We sent you a verification code on your registered email/phone. </template>
+                  </p>
 
                   <!---Code verification Form-->
-                  <AuthCodeVerification />
+                  <AuthCodeVerification :mobileNumber="maskedMobileNumber" />
                   <!---Code verification Form-->
                 </v-card-text>
               </v-card>

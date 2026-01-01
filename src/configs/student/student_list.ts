@@ -34,7 +34,7 @@ export interface ProfileListGroup {
 export type ProfileListItem = ProfileListGroup | ProfileListChild;
 
 export const headers: columns[] = [
-    { title: "Stu ID", key: "student_id", sortable: true, maxWidth: "80px" },
+    { title: "Stu ID", key: "student_id", sortable: true, maxWidth: "70px" },
     { title: "Student Info", key: "name", sortable: true, align: "start", formatType: $keys.DT_PROFILE },
     { title: "Class & Board", key: "class_name", sortable: true, formatType: $keys.DT_CUSTOM },
     { title: "Location", key: "city", sortable: true },

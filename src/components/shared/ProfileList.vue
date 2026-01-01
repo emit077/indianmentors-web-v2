@@ -43,11 +43,13 @@ const props = defineProps<{
             <div class="flex-grow-1 pl-4" style="min-width: 0">
               <div class="d-flex align-top">
                 <div class="flex-grow-1" style="min-width: 0">
-                  <div
-                    class="text-subtitle-1 font-weight-medium text-truncate"
-                    style="width: 150px"
-                  >
-                    {{ props.data.name }}
+                  <div class="d-flex align-center text-subtitle-1">
+                    <div
+                      class="text-subtitle-1 font-weight-medium text-truncate"
+                      style="max-width: 90%"
+                    >
+                      {{ data.name }}
+                    </div>
                     <v-icon :icon="mdiCheckDecagram" color="success" />
                   </div>
 

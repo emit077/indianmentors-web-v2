@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import { ref, computed, onMounted } from "vue";
 import { fetchWrapper } from "@/utils/helpers/fetch-wrapper";
+import { useDebouncedSearch } from "@/utils/api/axios";
+import URLS from "@/utils/urls";
 import {
   mdiCheckDecagram,
   mdiTableLarge,
@@ -53,8 +55,15 @@ interface Student {
 // Sample data - replace with API call
 const studentList = ref<Student[]>([]);
 const loading = ref(false);
-const searchQuery = ref("");
+
+// Use debounced search composable to fetch/search students from API
+const search = useDebouncedSearch<Student>(URLS.STUDENT_LIST, {
+  debounceMs: 300,
+  minLength: 0,
+  initialQuery: "",
+});
 const tab = ref("table");
+const page = ref(10);
 
 // Sample data for demonstration
 const sampleData: Student[] = [
@@ -970,23 +979,29 @@ const fetchStudents = async () => {
   }
 };
 
-// Filtered students based on search
-const filteredStudents = computed(() => {
-  if (!searchQuery.value) return studentList.value;
+// Displayed students - prefer API results; fallback to local sample data
+const displayedStudents = computed(() => {
+  const q = (search.query.value || "").trim();
 
-  const query = searchQuery.value.toLowerCase();
-  return studentList.value.filter(
-    (student) =>
-      student.name.toLowerCase().includes(query) ||
-      student.student_id.toLowerCase().includes(query) ||
-      student.email.toLowerCase().includes(query) ||
-      student.mobile.includes(query) ||
-      student.city.toLowerCase().includes(query)
-  );
+  // If user has typed a query, show search results (even if empty)
+  if (q.length > 0) return search.results.value;
+
+  // No query: prefer results from initial fetch if present, else fallback to sample data
+  if (search.results.value && search.results.value.length) return search.results.value;
+  if (search.loading.value) return [];
+  return sampleData;
 });
 
-onMounted(() => {
-  fetchStudents();
+onMounted(async () => {
+  // initial local data populate
+  studentList.value = sampleData;
+
+  // Fetch initial list from API using the composable (minLength set to 0)
+  try {
+    await search.search();
+  } catch (err) {
+    console.error("Error fetching students via search:", err);
+  }
 });
 </script>
 
@@ -1011,9 +1026,10 @@ onMounted(() => {
 
     <!-- Search and Filter Section -->
     <v-row class="mb-4">
-      <v-col cols="12" md="4">
+      <v-col cols="12" md="5">
         <v-text-field
-          v-model="searchQuery"
+          v-model="search.query"
+          :loading="search.loading.value"
           placeholder="Search students..."
           variant="outlined"
           clearable
@@ -1026,7 +1042,7 @@ onMounted(() => {
           </template>
         </v-text-field>
       </v-col>
-      <v-col cols="12" md="8" class="justify-end d-flex pr-0">
+      <v-col cols="12" md="7" class="justify-end d-flex pr-0">
         <slot name="tableController">
           <v-btn
             class="hidden-md-and-down mr-2 ml-0"
@@ -1052,7 +1068,7 @@ onMounted(() => {
     <!--  -->
 
     <div>
-      <v-btn-toggle v-model="tab" border color="primary" variant="text">
+      <v-btn-toggle v-model="tab" border color="primary" variant="text" mandatory>
         <v-btn value="table" :icon="mdiTableLarge"></v-btn>
         <v-btn value="list" :icon="mdiListBoxOutline"></v-btn>
         <v-btn value="card" :icon="mdiAccountBoxOutline"></v-btn>
@@ -1063,17 +1079,17 @@ onMounted(() => {
       <v-tabs-window-item :value="'table'">
         <DataTable
           :headers="headers"
-          :items="sampleData"
+          :items="displayedStudents"
           total-items="20"
-          :loading="loading"
+          :loading="search.loading.value"
           items-per-page="20"
-          :search="searchQuery"
+          :search="search.query.value"
           item-value="user_table_id"
           search-placeholder="Search students..."
           no-data-message="No students found. Try adjusting your search criteria or add your first student."
         >
           <!-- @update:items-per-page="(v) => (itemsPerPage = v)"
-          @update:search="(v) => (searchQuery = v)"
+          @update:search="(v) => (search.query.value = v)"
           @action="handleAction" -->
           <template #item.class_name="{ item }">
             <div>
@@ -1087,7 +1103,7 @@ onMounted(() => {
       </v-tabs-window-item>
       <v-tabs-window-item :value="'list'">
         <!-- Profile list UI -->
-        <div v-for="data in sampleData">
+        <div v-for="data in displayedStudents" :key="data.user_table_id || data.id">
           <ProfileList :config="profileListConfig" :data="data">
             <template #actionBtn="{ item, con }">
               <div class="mb-3 text-right">
@@ -1102,7 +1118,7 @@ onMounted(() => {
       <v-tabs-window-item :value="'card'">
         <!-- Profile card UI -->
         <v-row class="" no-gutters>
-          <v-col cols="12" md="4" class="pa-1" v-for="data in sampleData">
+          <v-col cols="12" md="4" class="pa-1" v-for="data in displayedStudents" :key="data.user_table_id || data.id">
             <ProfileCard :config="profileCardConfig" :data="data">
               <template #classAndBoard="{ item, con }">
                 <div class="">
@@ -1126,6 +1142,16 @@ onMounted(() => {
       </v-tabs-window-item>
     </v-tabs-window>
 
+    <div class="text-center justify-center">
+      <v-pagination
+        class=""
+        color="primary"
+        variant="text"
+        v-model="page"
+        :length="15"
+        :total-visible="7"
+      ></v-pagination>
+    </div>
     <!--  -->
 
     <!--  -->

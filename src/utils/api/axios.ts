@@ -29,9 +29,9 @@ axiosInstance.interceptors.request.use(
       const authStore = useAuthStore();
       const user = authStore.getUser();
 
-      // Check for token in multiple possible fields
-      // Regular login uses 'token', Google login uses 'access_token'
-      const token = "ee976efdff9c9713fa009b892920decb588ae23d"//user?.token || user?.access_token;
+        // Check for token in multiple possible fields
+        // Regular login uses 'token', Google login uses 'access_token'
+        const token = user?.token || user?.access_token;
 
       if (token && config.headers) {
         config.headers.Authorization = `Bearer ${token}`;
