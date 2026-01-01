@@ -6,13 +6,24 @@ const baseUrl = `${import.meta.env.VITE_API_URL}/users`;
 
 export const useAuthStore = defineStore({
   id: 'auth',
-  state: () => ({
-    // initialize state from local storage to enable user to stay logged in
-    /* eslint-disable-next-line @typescript-eslint/ban-ts-comment */
-    // @ts-ignore
-    user: JSON.parse(localStorage.getItem('user')),
-    returnUrl: null
-  }),
+  state: () => {
+    // Safely parse user from localStorage
+    let user = null;
+    try {
+      const userStr = localStorage.getItem('user');
+      if (userStr) {
+        user = JSON.parse(userStr);
+      }
+    } catch (error) {
+      console.error('Error parsing user from localStorage:', error);
+      localStorage.removeItem('user');
+    }
+    
+    return {
+      user,
+      returnUrl: null
+    };
+  },
   actions: {
     async login(username: string, password: string) {
       const user = await fetchWrapper.post(`${baseUrl}/authenticate`, { username, password });
