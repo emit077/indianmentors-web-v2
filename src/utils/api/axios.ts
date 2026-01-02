@@ -22,10 +22,10 @@ axiosInstance.interceptors.request.use(
       const authStore = useAuthStore();
       const user = authStore.getUser();
       // Get token from user object
-      const token = user?.token || user?.access_token;
+      const token = user?.token || user?.access_token || localStorage.getItem('access_token');
 
       if (token && config.headers) {
-        config.headers.Authorization = `Bearer ${token}`;
+        config.headers.Authorization = `Token ${token}`;
       } else if (import.meta.env.DEV) {
         // Debug: Log when token is missing (only in development)
         console.warn('⚠️ No authentication token found for request:', config.url);
