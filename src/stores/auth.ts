@@ -17,12 +17,12 @@ export const useAuthStore = defineStore({
       console.error('Error parsing user from localStorage:', error);
       localStorage.removeItem('user');
     }
-    
+
     return {
       user,
       returnUrl: null,
-      pendingLogin: null as { 
-        email?: string; 
+      pendingLogin: null as {
+        email?: string;
         mobile?: string;
         masked_phone?: string;
         username?: string;
@@ -52,10 +52,11 @@ export const useAuthStore = defineStore({
         });
 
         // Extract OTP-TOKEN from response headers (case-insensitive)
-        const otpToken = response.headers['otp-token'] || 
-                        response.headers['OTP-TOKEN'] || 
-                        response.headers['otp_token'] ||
-                        (response.headers as any)['Otp-Token'];
+        const otpToken =
+          response.headers['otp-token'] ||
+          response.headers['OTP-TOKEN'] ||
+          response.headers['otp_token'] ||
+          (response.headers as any)['Otp-Token'];
 
         // Extract response data (handle both wrapped and direct responses)
         const responseData = (response.data as any)?.result || response.data;
@@ -90,11 +91,6 @@ export const useAuthStore = defineStore({
     async verifyOTP(otp: string, otpToken?: string) {
       try {
         // Get pending login info
-        const pendingLogin = this.pendingLogin || JSON.parse(sessionStorage.getItem('pendingLogin') || '{}');
-
-        if (!pendingLogin.username) {
-          throw new Error('No pending login found. Please login again.');
-        }
 
         // Prepare verification payload
         // For mobile login, use mobile; for email login, use username
@@ -102,18 +98,7 @@ export const useAuthStore = defineStore({
           otp: otp
         };
 
-        if (pendingLogin.mobile || pendingLogin.masked_phone) {
-          // Mobile login - use mobile number
-          verifyPayload.mobile = pendingLogin.username; // username is the mobile number
-        } else {
-          // Email login - use username/email
-          verifyPayload.username = pendingLogin.username;
-        }
-
-        // Get OTP-TOKEN from parameter or pending login
-        const token = otpToken || pendingLogin.otpToken;
-
-        if (!token) {
+        if (!otpToken) {
           throw new Error('OTP token not found. Please login again.');
         }
 
@@ -125,36 +110,19 @@ export const useAuthStore = defineStore({
           message?: string;
         }>(URLS.USER_VERIFY_OTP, verifyPayload, {
           headers: {
-            'OTP-TOKEN': token
+            'OTP-TOKEN': otpToken
           }
         });
 
-        // Extract response data (handle both wrapped and direct responses)
-        const responseData = (response.data as any)?.result || response.data;
-
-        // Create user object with token
-        const user = {
-          ...(responseData?.user || responseData),
-          token: responseData?.token || responseData?.access_token
-        };
-
-        // Update pinia state
-        this.user = user;
-        
         // Store user details and jwt in local storage
-        localStorage.setItem('user', JSON.stringify(user));
-        
-        // Clear pending login
-        this.pendingLogin = null;
-        sessionStorage.removeItem('pendingLogin');
+        localStorage.setItem('token', '');
 
         // Redirect to previous url or default to home page
         router.push(this.returnUrl || '/dashboard/default');
 
         return {
           success: true,
-          user,
-          message: responseData?.message || 'Login successful'
+          message: response?.message || 'Login successful'
         };
       } catch (error: any) {
         throw error;
@@ -167,6 +135,15 @@ export const useAuthStore = defineStore({
      */
     async sendMobileOTP(mobileNumber: string) {
       try {
+        const newUser = await api.post(URLS.USER_LOGIN, {
+          mobile: mobileNumber
+        });
+      } catch (error) {
+        // This catch will still work, but common errors are already handled
+        console.error('Unexpected error:', error);
+      }
+
+      try {
         const axiosInstance = api.getInstance();
         const response = await axiosInstance.post<{
           mobile?: string;
@@ -176,7 +153,7 @@ export const useAuthStore = defineStore({
         });
         const otpToken = response.headers['OTP_TOKEN'] || response.headers['otp_token'];
         console.log('otpToken', response.headers);
-        
+
         const responseData = (response.data as any)?.result || response.data;
 
         return {
@@ -211,7 +188,7 @@ export const useAuthStore = defineStore({
 
         // Prepare resend payload - use mobile for mobile login, username for email login
         const resendPayload: any = {};
-        
+
         if (pendingLogin.mobile || pendingLogin.masked_phone) {
           // Mobile login - use mobile number
           resendPayload.mobile = pendingLogin.username;
@@ -255,9 +232,13 @@ export const useAuthStore = defineStore({
     async login(username: string, password: string) {
       // For backward compatibility, try direct login first
       try {
-        const user = await api.post(`${URLS.USER_LOGIN}`, { username, password }, {
-          skipDefaultErrorHandling: true
-        });
+        const user = await api.post(
+          `${URLS.USER_LOGIN}`,
+          { username, password },
+          {
+            skipDefaultErrorHandling: true
+          }
+        );
 
         this.user = user;
         localStorage.setItem('user', JSON.stringify(user));
@@ -268,23 +249,23 @@ export const useAuthStore = defineStore({
         throw error;
       }
     },
-    
+
     async loginWithGoogle(googleUser: any) {
       try {
         // Store Google user data
         this.user = googleUser;
         localStorage.setItem('user', JSON.stringify(googleUser));
-        
+
         // Redirect to dashboard
         router.push(this.returnUrl || '/dashboard/default');
-        
+
         return { success: true, user: googleUser };
       } catch (error) {
         console.error('Google login error:', error);
         throw error;
       }
     },
-    
+
     async logout() {
       // If user logged in with Google, sign out from Google as well
       if (this.user?.provider === 'google') {
@@ -297,17 +278,17 @@ export const useAuthStore = defineStore({
           console.error('Google sign out error:', error);
         }
       }
-      
+
       this.user = null;
       localStorage.removeItem('user');
       router.push('/auth/login1');
     },
-    
+
     // Check if user is authenticated
     isAuthenticated() {
       return !!this.user;
     },
-    
+
     // Get user info
     getUser() {
       return this.user;

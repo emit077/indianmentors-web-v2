@@ -1,6 +1,9 @@
 <script setup lang="ts">
 import { ref, computed, onMounted, onUnmounted } from 'vue';
 import { useAuthStore } from '@/stores/auth';
+import { api } from '@/utils/api/axios';
+import URLS from '@/utils/urls';
+import { router } from '@/router';
 
 const authStore = useAuthStore();
 
@@ -16,7 +19,7 @@ const props = withDefaults(defineProps<Props>(), {
 });
 
 // Emit events
-const emit = defineEmits<{
+const $emit = defineEmits<{
   back: [];
 }>();
 
@@ -35,11 +38,7 @@ onMounted(() => {
   startResendCountdown();
 });
 
-// Handle back to login
-const handleBack = () => {
-  emit('back');
-};
-
+/* Start countdown for resend OTP */
 const startResendCountdown = () => {
   resendCooldown.value = 30;
   if (countdownInterval) {
@@ -56,53 +55,56 @@ const startResendCountdown = () => {
     }
   }, 1000);
 };
-
+/** Verify OTP */
 const handleVerifyOTP = async () => {
+  // Validate OTP
   if (!otp.value || otp.value.length !== 6) {
     errorMessage.value = 'Please enter a valid 6-digit OTP';
     return;
   }
-
   loading.value = true;
   errorMessage.value = '';
   successMessage.value = '';
-
   try {
-    // Pass OTP token from props if available, otherwise let store use pendingLogin
-    const result = await authStore.verifyOTP(otp.value, props.otpToken || undefined);
-    successMessage.value = result.message || 'Login successful! Redirecting...';
-
-    // Router will handle redirect in the store
-  } catch (error: any) {
-    errorMessage.value = error.response?.data?.message || error.message || 'Invalid OTP. Please try again.';
-    otp.value = ''; // Clear OTP on error
+    const response = await api.post(
+      URLS.USER_VERIFY_OTP,
+      { otp: otp.value },
+      {
+        customHeaders: { 'OTP-TOKEN': props.otpToken },
+        returnResponse: true // To access response headers
+      }
+    );
+    // Store token in local storage
+    localStorage.setItem('access_token', response.headers['access_token']);
+    router.push('/dashboard/default');
+  } catch (error) {
+    console.error('Unexpected error:', error);
   } finally {
     loading.value = false;
   }
 };
-
+/* Resend OTP */
 const handleResendOTP = async () => {
-  if (resendCooldown.value > 0) {
-    return; // Still in cooldown
-  }
-
   resendLoading.value = true;
   errorMessage.value = '';
   successMessage.value = '';
-
   try {
-    // Pass OTP token from props if available, otherwise let store use pendingLogin
-    const result = await authStore.resendOTP(props.otpToken || undefined);
-    successMessage.value = result.message || 'OTP resent successfully!';
-    startResendCountdown(); // Restart countdown
+    const response = await api.post(
+      URLS.USER_RESEND_OTP,
+      { otp: otp.value },
+      {
+        customHeaders: { 'OTP-TOKEN': props.otpToken },
+        returnResponse: true // To access response headers
+      }
+    );
+    successMessage.value = response.data.result.message || 'OTP resent successfully!';
   } catch (error: any) {
     errorMessage.value = error.response?.data?.message || error.message || 'Failed to resend OTP. Please try again.';
   } finally {
     resendLoading.value = false;
   }
 };
-
-// Cleanup on unmount
+/* Cleanup on unmount */
 onUnmounted(() => {
   if (countdownInterval) {
     clearInterval(countdownInterval);
@@ -113,7 +115,7 @@ onUnmounted(() => {
 <template>
   <div class="d-flex justify-space-between align-center mt-4">
     <h3 class="text-h3 text-center mb-0">Verification Code</h3>
-    <span class="text-primary text-decoration-none cursor-pointer" @click="handleBack">Back to Login</span>
+    <span class="text-primary text-decoration-none cursor-pointer" @click="$emit('back')">Back to Login</span>
   </div>
   <div>
     <p class="text-h6 my-6">

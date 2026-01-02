@@ -1,37 +1,28 @@
 <script setup lang="ts">
 import { ref } from 'vue';
-import { useAuthStore } from '@/stores/auth';
 import { Form } from 'vee-validate';
 import { mobileRules } from '@/utils/rules';
-
-const authStore = useAuthStore();
+import { api } from '@/utils/api/axios';
+import URLS from '@/utils/urls';
 
 const mobileNumber = ref('');
 const loading = ref(false);
 const errorMessage = ref('');
 
 // Emit events
-const emit = defineEmits<{
+const $emit = defineEmits<{
   otpSent: [mobileNumber: string, otpToken: string];
 }>();
 
-/* eslint-disable @typescript-eslint/no-explicit-any */
-async function handleMobileLogin(values: any, { setErrors }: any) {
-  loading.value = true;
-  errorMessage.value = '';
-
+// Handle mobile login
+async function handleMobileLogin() {
   try {
-    const result = await authStore.sendMobileOTP(mobileNumber.value);
+    const response = await api.post(URLS.USER_LOGIN, { mobile: mobileNumber.value }, { returnResponse: true });
+    const otpToken = response.headers['OTP_TOKEN'] || response.headers['otp_token'];
     // Emit event to parent to move to OTP step with mobile number and OTP token
-    console.log('result', result);
-    emit('otpSent', mobileNumber.value, result.otpToken || '');
-  } catch (error: any) {
-    // Handle error
-    const errorMsg = error.response?.data?.message || error.message || 'Failed to send OTP. Please try again.';
-    errorMessage.value = errorMsg;
-    setErrors({ apiError: errorMsg });
-  } finally {
-    loading.value = false;
+    $emit('otpSent', mobileNumber.value, otpToken);
+  } catch (error) {
+    console.error('Unexpected error:', error);
   }
 }
 </script>
