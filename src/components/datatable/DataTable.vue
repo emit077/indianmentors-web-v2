@@ -1,59 +1,4 @@
 <template>
-  <!-- Table Header with Search -->
-  <!-- <div v-if="showSearch" class="flex-grow-1" style="max-width: 100%; width: 100%">
-    <v-row class="mb-5 justify-end align-center">
-      <v-col cols="12" md="4" class="pr-0">
-        <v-text-field
-          v-model="localSearch"
-          :label="searchPlaceholder"
-          variant="outlined"
-          density="default"
-          clearable
-          hide-details
-          rounded="lg"
-          class="search-field"
-          @update:model-value="handleSearchChange"
-        >
-          <template v-slot:prepend-inner>
-            <div class="text-lightText d-flex align-center">
-              <SvgSprite name="custom-search" style="width: 16px; height: 16px" />
-            </div>
-          </template>
-        </v-text-field>
-      </v-col>
-      <v-col cols="12" md="8" class="justify-end d-flex pr-0">
-        <slot name="tableController">
-          <v-btn
-            class="hidden-md-and-down mr-2 ml-0"
-            color="secondary"
-            icon
-            aria-label="sidebar button"
-            rounded="sm"
-            variant="tonal"
-          >
-            <SvgSprite name="custom-filter" style="width: 26px; height: 26px" />
-          </v-btn>
-          <v-btn
-            class="hidden-md-and-down mr-5 ml-0"
-            color="secondary"
-            icon
-            aria-label="sidebar button"
-            rounded="sm"
-            variant="tonal"
-          >
-            <SvgSprite
-              name="custom-document-upload"
-              style="width: 28px; height: 28px"
-              class="rotate-180"
-            />
-          </v-btn>
-        </slot>
-      </v-col>
-    </v-row>
-  </div>
-  <v-divider v-if="showSearch || showHeader" /> -->
-
-  <!-- Data Table -->
   <v-data-table-server
     color="primary"
     v-model:items-per-page="localItemsPerPage"
@@ -77,16 +22,13 @@
     </template>
 
     <!-- Custom Column Slots -->
-    <template
-      v-for="header in headers"
-      :key="header.key"
-      #[`item.${header.key}`]="{ item, value }"
-    >
+    <template v-for="header in headers" :key="header.key" #[`item.${header.key}`]="{ item, value }">
       <!-- profile UI -->
       <div v-if="header.formatType == $keys.DT_PROFILE">
         <DtProfile
-          :profile-data="item"
-          :avatar-size="45"
+          :profile-data="item.user"
+          :avatar-size="40"
+          :sortable="false"
           active-color="success"
           inactive-color="grey"
           :show-subtitle="true"
@@ -97,19 +39,7 @@
       </div>
       <!-- custome UI -->
       <div v-else-if="header.formatType == $keys.DT_CUSTOM">
-        <slot :name="`item.${header.key}`" :item="item" :value="value" :header="header">
-        </slot>
-      </div>
-      <!-- action Btns -->
-      <div v-else-if="header.formatType == $keys.DT_BTNS">
-        <DtBtn
-          btn="{
-            icon: value.icon,
-            color: value.color,
-            title: value.title,
-          }"
-          @click="handleAction(value.action, item, value.data)"
-        ></DtBtn>
+        <slot :name="`item.${header.key}`" :item="item" :value="value" :header="header"> </slot>
       </div>
       <!-- default -->
       <div v-else class="word-break">
@@ -148,21 +78,22 @@
 </template>
 
 <script setup lang="ts">
-import { ref, watch, computed } from "vue";
-import DtProfile from "@/components/datatable/DtProfile.vue";
-import DtBtn from "@/components/datatable/DtBtn.vue";
-import $keys from "@/utils/keys";
+import { ref, watch, computed } from 'vue';
+import DtProfile from '@/components/datatable/DtProfile.vue';
+import DtBtn from '@/components/datatable/DtBtn.vue';
+import $keys from '@/utils/keys';
 
 export interface TableOptions {
   page: number;
   itemsPerPage: number;
-  sortBy: { key: string; order: "asc" | "desc" }[];
-  groupBy?: { key: string; order: "asc" | "desc" }[];
+  sortBy: { key: string; order: 'asc' | 'desc' }[];
+  groupBy?: { key: string; order: 'asc' | 'desc' }[];
   search?: string;
 }
+
 // Props
 interface Props {
-  headers: TableHeader[];
+  headers: any[];
   items: any[];
   totalItems: number;
   loading?: boolean;
@@ -184,25 +115,25 @@ interface Props {
 const props = withDefaults(defineProps<Props>(), {
   loading: false,
   itemsPerPage: 10,
-  itemValue: "id",
+  itemValue: 'id',
   showSelect: false,
   showExpand: false,
   showSearch: true,
   showHeader: true,
   showTotalCount: true,
   showFilteredCount: true,
-  searchPlaceholder: "Search...",
-  searchIcon: "mdi-magnify",
-  noDataMessage: "No data available",
-  search: "",
+  searchPlaceholder: 'Search...',
+  searchIcon: 'mdi-magnify',
+  noDataMessage: 'No data available',
+  search: ''
 });
 
 // Emits
 const emit = defineEmits<{
-  "update:options": [options: TableOptions];
-  "update:items-per-page": [value: number];
-  "update:search": [value: string];
-  "row-click": [event: MouseEvent, item: any];
+  'update:options': [options: TableOptions];
+  'update:items-per-page': [value: number];
+  'update:search': [value: string];
+  'row-click': [event: MouseEvent, item: any];
   action: [action: string, item: any, data?: any];
   view: [item: any];
   edit: [item: any];
@@ -213,11 +144,11 @@ const emit = defineEmits<{
 // Local state
 const localSearch = ref(props.search);
 const localItemsPerPage = ref(props.itemsPerPage);
-const searchTrigger = ref("");
+const searchTrigger = ref('');
 
 // Computed
 const computedItemValue = computed(() => {
-  if (typeof props.itemValue === "function") {
+  if (typeof props.itemValue === 'function') {
     return props.itemValue;
   }
   return props.itemValue;
@@ -244,48 +175,48 @@ watch(
 );
 
 watch(localItemsPerPage, (newValue) => {
-  emit("update:items-per-page", newValue);
+  emit('update:items-per-page', newValue);
 });
 
 // Handlers
 const handleSearchChange = (value: string) => {
-  localSearch.value = value || "";
+  localSearch.value = value || '';
   searchTrigger.value = String(Date.now());
-  emit("update:search", localSearch.value);
+  emit('update:search', localSearch.value);
 };
 
 const handleOptionsUpdate = (options: TableOptions) => {
-  emit("update:options", {
+  emit('update:options', {
     ...options,
-    search: localSearch.value,
+    search: localSearch.value
   });
 };
 
 const handleRowClick = (event: MouseEvent, item: { item: any }) => {
-  emit("row-click", event, item.item);
+  emit('row-click', event, item.item);
 };
 
 // Expose action handlers for child components
 const handleAction = (action: string, item: any, data?: any) => {
-  emit("action", action, item, data);
+  emit('action', action, item, data);
 
   // Emit specific action events
   switch (action) {
-    case "view":
-      emit("view", item);
+    case 'view':
+      emit('view', item);
       break;
-    case "edit":
-      emit("edit", item);
+    case 'edit':
+      emit('edit', item);
       break;
-    case "delete":
-      emit("delete", item);
+    case 'delete':
+      emit('delete', item);
       break;
   }
 };
 
 // Expose methods
 defineExpose({
-  handleAction,
+  handleAction
 });
 </script>
 
@@ -318,6 +249,18 @@ defineExpose({
     text-transform: uppercase;
     font-size: 0.75rem;
     letter-spacing: 0.5px;
+  }
+
+  // Hide default loading progress bar
+  :deep(.v-data-table__progress),
+  :deep(.v-progress-linear),
+  :deep(.v-data-table__top),
+  :deep(.v-data-table__wrapper > .v-progress-linear) {
+    display: none !important;
+    visibility: hidden !important;
+    height: 0 !important;
+    min-height: 0 !important;
+    max-height: 0 !important;
   }
 }
 

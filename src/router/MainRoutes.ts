@@ -48,7 +48,7 @@ const MainRoutes = {
     },
     {
       name: 'StudentProfile',
-      path: '/students/profile',
+      path: '/students/profile/:id',
       component: () => import('@/views/student/StudentProfile.vue')
     }
   ]

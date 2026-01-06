@@ -1,8 +1,10 @@
 <script setup lang="ts">
-import { mdiCheckDecagram } from "@mdi/js";
-import $keys from "@/utils/keys";
-import type { ProfileCardConfigItem } from "@/configs/student/student_list";
-
+import { mdiCheckDecagram } from '@mdi/js';
+import $keys from '@/utils/keys';
+import type { ProfileCardConfigItem } from '@/configs/student/student_list';
+import male from '@/assets/images/gender/male.png';
+import female from '@/assets/images/gender/female.png';
+const avatarSize = 40;
 const props = defineProps<{
   config: ProfileCardConfigItem[];
   data: any; // or a typed interface for your student data
@@ -19,15 +21,11 @@ const props = defineProps<{
         <div class="d-flex align-top" v-if="con.formatType == $keys.DT_PROFILE">
           <div class="text-center">
             <div>
-              <v-progress-circular
-                :model-value="70"
-                :rotate="180"
-                :size="58"
-                :width="5"
-                color="primary"
-              >
-                <v-avatar size="50" color="secondary " variant="flat" class="">
-                  <span class="text-body-1 font-weight-bold"> M </span>
+              <v-progress-circular :model-value="data.user.profile_completion_per" :rotate="180" :size="50" :width="5" color="primary">
+                <v-avatar :size="avatarSize" color="primary" variant="tonal" class="">
+                  <v-img v-if="data.user.gender === 'Male'" :src="male" :alt="data.user.gender" :size="avatarSize" class="mt-1" />
+                  <v-img v-else-if="data.user.gender === 'Female'" :src="female" :alt="data.user.gender" :size="avatarSize" class="mt-1" />
+                  <span v-else class="text-body-1 font-weight-bold"> -- </span>
                 </v-avatar>
               </v-progress-circular>
             </div>
@@ -37,18 +35,12 @@ const props = defineProps<{
             <div class="d-flex align-top">
               <div class="flex-grow-1" style="min-width: 0">
                 <div class="d-flex align-center text-subtitle-1">
-                  <div
-                    class="text-subtitle-1 font-weight-medium text-truncate"
-                    style="max-width: 90%"
-                  >
-                    {{ data.name }}
+                  <div class="text-subtitle-1 font-weight-medium text-truncate" style="max-width: 90%">
+                    {{ data.user.name }}
                   </div>
                   <v-icon :icon="mdiCheckDecagram" color="success" />
                 </div>
-
-                <p class="text-caption text-lightText font-weight-medium my-2 d-block">
-                  #{{ data.student_id }}
-                </p>
+                <p class="text-caption text-lightText font-weight-medium my-2 d-block">#{{ data.student_id }}</p>
               </div>
             </div>
           </div>
@@ -56,7 +48,7 @@ const props = defineProps<{
         <!-- text card -->
         <div class="" v-else-if="con.formatType == $keys.DT_TEXT">
           <div class="text-caption text-medium-emphasis mb-1">{{ con.label }}</div>
-          <div class="text-subtitle-2 text-truncate">{{ data[con.value] || "-" }}</div>
+          <div class="text-subtitle-2 text-truncate">{{ data[con.value] || '-' }}</div>
         </div>
         <!-- custome slot -->
         <div class="" v-else-if="con.formatType == $keys.DT_CUSTOM">

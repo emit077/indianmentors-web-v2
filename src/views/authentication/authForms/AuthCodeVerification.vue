@@ -74,8 +74,10 @@ const handleVerifyOTP = async () => {
         returnResponse: true // To access response headers
       }
     );
-    // Store token in local storage
+    //set local storage access token
     localStorage.setItem('access_token', response.headers['access_token']);
+    authStore.setUser(response.data.result.user);
+
     router.push('/dashboard/default');
   } catch (error) {
     console.error('Unexpected error:', error);

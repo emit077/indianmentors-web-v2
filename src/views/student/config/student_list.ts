@@ -4,10 +4,11 @@ export interface columns {
   title?: string;
   key?: string;
   align?: string;
-  sortable?: boolean;
+  sortable?: boolean | false;
   formatType?: string;
   width?: string;
   maxWidth?: string;
+  minWidth?: string;
 }
 
 export interface ProfileCardConfigItem {
@@ -32,13 +33,13 @@ export interface ProfileListGroup {
 export type ProfileListItem = ProfileListGroup | ProfileListChild;
 
 export const headers: columns[] = [
-  { title: 'Stu ID', key: 'student_id', sortable: true, maxWidth: '70px' },
-  { title: 'Student Info', key: 'name', sortable: true, align: 'start', formatType: $keys.DT_PROFILE },
-  { title: 'Class & Board', key: 'class_name', sortable: true, formatType: $keys.DT_CUSTOM },
-  { title: 'Location', key: 'city', sortable: true },
-  { title: 'Status', key: 'profile_status', sortable: true, formatType: $keys.DT_CHIP },
-  { title: 'Signup Date', key: 'signup_date', sortable: true },
-  { title: 'Actions', key: 'DT_BTNS', sortable: false, align: 'end' }
+  { title: 'Student ID', key: 'student_id', minWidth: '65px', sortable: false },
+  { title: 'Student Info', key: 'user', minWidth: '100px', align: 'start', formatType: $keys.DT_PROFILE, sortable: false },
+  { title: 'Class & Board', key: 'class_name', maxWidth: '200px', formatType: $keys.DT_CUSTOM, sortable: false },
+  { title: 'Location', key: 'city', sortable: false },
+  // { title: 'Status', key: 'profile_status', formatType: $keys.DT_CHIP },
+  { title: 'Signup Date', key: 'signup_date', sortable: false },
+  { title: 'Actions', key: 'DT_BTNS', align: 'end', formatType: $keys.DT_CUSTOM, sortable: false }
 ];
 
 export const profileCardConfig: ProfileCardConfigItem[] = [

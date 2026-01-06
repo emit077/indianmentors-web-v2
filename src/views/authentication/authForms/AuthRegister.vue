@@ -23,7 +23,7 @@ function validate() {
 <template>
   <div class="d-flex justify-space-between align-center">
     <h3 class="text-h3 text-center mb-0">Sign up</h3>
-    <router-link to="/auth/login1" class="text-primary text-decoration-none">Already have an account?</router-link>
+    <router-link to="/auth/login/" class="text-primary text-decoration-none">Already have an account?</router-link>
   </div>
   <v-form ref="Regform" lazy-validation action="/dashboards/analytical" class="mt-7 loginForm">
     <v-row class="my-0">

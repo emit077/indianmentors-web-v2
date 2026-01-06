@@ -97,8 +97,7 @@ const handleGoogleCallback = async () => {
     };
 
     // Store user in auth store
-    authStore.user = googleUser;
-    localStorage.setItem('user', JSON.stringify(googleUser));
+    authStore.setUser(googleUser);
 
     user.value = googleUser;
     isSuccess.value = true;
@@ -153,12 +152,12 @@ const getUserInfoFromGoogle = async (accessToken: string) => {
 
 // Retry login
 const retryLogin = () => {
-  router.push('/auth/login1');
+  router.push('/auth/login/');
 };
 
 // Go to login page
 const goToLogin = () => {
-  router.push('/auth/login1');
+  router.push('/auth/login/');
 };
 
 // Lifecycle
@@ -209,4 +208,3 @@ onMounted(() => {
   }
 }
 </style>
-

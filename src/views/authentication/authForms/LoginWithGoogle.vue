@@ -95,8 +95,7 @@ const handleGoogleResponse = async (response: any) => {
     };
 
     // Store user in auth store
-    authStore.user = googleUser;
-    localStorage.setItem('user', JSON.stringify(googleUser));
+    authStore.setUser(googleUser);
 
     // Show success message
     if (props.showSuccessMessage) {

@@ -20,7 +20,7 @@ const sidebarMenu = shallowRef(sidebarItems);
     elevation="0"
     rail-width="90"
     mobile-breakpoint="lg"
-    width="280"
+    width="250"
     app
     class="leftSidebar"
     :rail="customizer.mini_sidebar"

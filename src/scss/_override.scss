@@ -71,23 +71,49 @@ header {
 }
 
 // table css
-// .v-table {
-//   &.v-table--hover {
-//     > .v-table__wrapper {
-//       > table {
-//         > tbody {
-//           > tr {
-//             &:hover {
-//               td {
-//                 background: rgb(var(--v-theme-containerBg));
-//               }
-//             }
-//           }
-//         }
-//       }
-//     }
-//   }
-// }
+.v-table {
+  > .v-table__wrapper {
+    > table {
+      > thead {
+        > tr {
+          > th {
+            background-color: rgba(var(--v-theme-primary), 0.08) !important;
+            color: rgb(var(--v-theme-primary)) !important;
+            text-transform: none !important;
+            font-weight: 400;
+            font-size: 13px !important;
+            padding: 5px 10px !important;
+            height: calc(var(--v-table-header-height) - 12px) !important;
+            border-bottom: 1px solid rgb(var(--v-theme-primary)) !important;
+          }
+        }
+      }
+      > tbody {
+        > tr {
+          &:hover {
+            background-color: rgba(var(--v-theme-primary), 0.03) !important;
+          }
+        }
+      }
+    }
+  }
+}
+
+// Hide default v-data-table loading progress bar
+.v-data-table-server,
+.v-data-table {
+  .v-data-table__progress,
+  .v-progress-linear,
+  .v-data-table__top .v-progress-linear,
+  > .v-progress-linear {
+    display: none !important;
+    visibility: hidden !important;
+    height: 0 !important;
+    min-height: 0 !important;
+    max-height: 0 !important;
+    opacity: 0 !important;
+  }
+}
 
 // accordion page css
 .v-expansion-panel {
@@ -114,4 +140,14 @@ header {
 }
 .v-expansion-panel--disabled .v-expansion-panel-title {
   color: rgba(var(--v-theme-on-surface), 0.15);
+}
+.dt_table_pagination.v-pagination .v-pagination__item--is-active .v-btn{
+  background-color: rgb(var(--v-theme-primary)) !important;
+  color: rgb(var(--v-theme-on-primary)) !important;
+  font-size: 14px !important;
+  font-weight: 500 !important;
+}
+.dt_table_pagination.v-pagination .v-pagination__item .v-btn{
+  font-size: 14px !important;
+  font-weight: 500 !important;
 }
