@@ -1,10 +1,10 @@
 <script setup lang="ts">
-import { RouterView } from "vue-router";
-import LoaderWrapper from "./LoaderWrapper.vue";
-import NavigationDrawer from "./drawer/NavigationDrawer.vue";
-import AppBar from "./header/AppBar.vue";
-import FooterPanel from "./footer/FooterPanel.vue";
-import { useCustomizerStore } from "../../stores/customizer";
+import { RouterView } from 'vue-router';
+import LoaderWrapper from './LoaderWrapper.vue';
+import NavigationDrawer from './drawer/NavigationDrawer.vue';
+import AppBar from './header/AppBar.vue';
+import FooterPanel from './footer/FooterPanel.vue';
+import { useCustomizerStore } from '../../stores/customizer';
 const customizer = useCustomizerStore();
 </script>
 
@@ -17,19 +17,18 @@ const customizer = useCustomizerStore();
         customizer.fontTheme,
         customizer.mini_sidebar ? 'mini-sidebar' : '',
         customizer.setHorizontalLayout ? 'horizontalLayout' : 'verticalLayout',
-        customizer.inputBg ? 'inputWithbg' : '',
+        customizer.inputBg ? 'inputWithbg' : ''
       ]"
     >
       <NavigationDrawer />
       <AppBar />
 
       <v-main class="page-wrapper">
-        <v-container fluid class="px-0">
+        <v-container fluid>
           <div>
             <!-- Loader start -->
             <LoaderWrapper />
             <!-- Loader end -->
-            <ComponentTitle></ComponentTitle>
             <RouterView />
           </div>
         </v-container>
