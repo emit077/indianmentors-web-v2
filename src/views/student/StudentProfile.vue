@@ -4,9 +4,7 @@ import { useRoute, useRouter } from 'vue-router';
 import { api } from '@/utils/api/axios';
 import URLS from '@/utils/urls';
 import { decrypt } from '@/utils/helpers/crypto';
-import UiParentCard from '@/components/shared/UiParentCard.vue';
 import ConfigField from '@/components/shared/ConfigField.vue';
-import studentProfileConfig from './config/student_profile';
 import BasicDetailsDialog from './components/BasicDetailsDialog.vue';
 import AcademicDetailsDialog from './components/AcademicDetailsDialog.vue';
 import AddressDetailsDialog from './components/AddressDetailsDialog.vue';
@@ -15,19 +13,30 @@ import TutorPreferencesDialog from './components/TutorPreferencesDialog.vue';
 import ParentDetailsDialog from './components/ParentDetailsDialog.vue';
 import ReferralDialog from './components/ReferralDialog.vue';
 import AdditionalDetailsDialog from './components/AdditionalDetailsDialog.vue';
-import getFeatherIcon from '@/utils/feather-icons';
 import male from '@/assets/images/gender/male.png';
 import female from '@/assets/images/gender/female.png';
-// Get student ID from route params
+import CommonHelpers from '@/utils/helpers/helper-functions';
+import ComponentTitle from '@/components/shared/ComponentTitle.vue';
+import pageConfig from './config/student_profile';
+import {
+  mdiChevronRight,
+  mdiPencil,
+  mdiPhoneOutline,
+  mdiEmailOutline,
+  mdiAccountSchool,
+  mdiMapMarkerOutline,
+  mdiClockOutline,
+  mdiViewList
+} from '@mdi/js';
+
+const mobileScreen = CommonHelpers.isMobile();
 const route = useRoute();
 const router = useRouter();
 const loading = ref(false);
 const error = ref<string | null>(null);
 const studentId = computed(() => decrypt(String(route.params.id)));
 
-// Student profile data - stored in reactive state (using API response structure)
 const studentData = ref<any>({});
-const profileTab = ref<string>('basic_details');
 
 // Dialog states
 const basicDetailsDialog = ref(false);
@@ -38,25 +47,6 @@ const tutorPreferencesDialog = ref(false);
 const parentDetailsDialog = ref(false);
 const referralDialog = ref(false);
 const additionalDetailsDialog = ref(false);
-
-// Computed properties for display
-const fullName = computed(() => {
-  if (studentData.value.name) {
-    return studentData.value.name;
-  }
-  if (studentData.value.first_name || studentData.value.last_name) {
-    return `${studentData.value.first_name || ''} ${studentData.value.last_name || ''}`.trim();
-  }
-  return 'Not provided';
-});
-
-const profilePictureUrl = computed(() => {
-  if (studentData.value.profile_picture || studentData.value.profilePicture) {
-    const picture = studentData.value.profile_picture || studentData.value.profilePicture;
-    return typeof picture === 'string' ? picture : URL.createObjectURL(picture);
-  }
-  return null;
-});
 
 // Fetch student profile from API
 const fetchStudentProfile = async () => {
@@ -70,8 +60,6 @@ const fetchStudentProfile = async () => {
 
   try {
     const response = await api.get<any>(URLS.STUDENT_PROFILE, { params: { student_table_id: studentId.value } });
-
-    // Use the API response directly - same variable names from API
     if (response) {
       studentData.value = response;
     }
@@ -79,7 +67,6 @@ const fetchStudentProfile = async () => {
     console.error('Error fetching student profile:', err);
     error.value = err.message || 'Failed to load student profile';
 
-    // Redirect to student list if student not found
     if (err.response?.status === 404) {
       setTimeout(() => {
         router.push({ name: 'StudentList' });
@@ -90,7 +77,6 @@ const fetchStudentProfile = async () => {
   }
 };
 
-// Load data from API on mount
 onMounted(() => {
   if (studentId.value) {
     fetchStudentProfile();
@@ -99,13 +85,11 @@ onMounted(() => {
   }
 });
 
-// Save section data
 const saveSectionData = (section: string, data: any) => {
   studentData.value = { ...studentData.value, ...data };
   localStorage.setItem('studentProfileData', JSON.stringify(studentData.value));
 };
 
-// Dialog mapping
 const dialogMap: Record<string, any> = {
   BasicDetailsDialog: basicDetailsDialog,
   AcademicDetailsDialog: academicDetailsDialog,
@@ -118,160 +102,356 @@ const dialogMap: Record<string, any> = {
 };
 
 const openDialog = (sectionKey: string) => {
-  const section = studentProfileConfig.find((s) => s.sectionKey === sectionKey);
+  const section = pageConfig.studentProfileConfig.find((s: any) => s.sectionKey === sectionKey);
   if (section?.dialogComponent && dialogMap[section.dialogComponent]) {
     dialogMap[section.dialogComponent].value = true;
   }
 };
 
-const onDownloadPDF = () => {
-  // Generate and download PDF
-  alert('PDF download functionality would be implemented here');
+const scrollToSection = (sectionKey: string) => {
+  const element = document.getElementById(sectionKey);
+  if (element) {
+    element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
 };
 </script>
 
 <template>
-  <v-row>
-    <v-col cols="12">
-      <div class="d-flex justify-space-between align-center mb-6 px-5">
-        <h1 class="text-h4">Student Profile</h1>
-        <v-btn color="primary" prepend-icon="mdi-download" @click="onDownloadPDF"> Download Profile (PDF) </v-btn>
-      </div>
+  <ComponentTitle :config="pageConfig.pageHeaderConfig" />
+
+  <!-- Loading State -->
+  <v-row v-if="loading">
+    <v-col cols="12" md="3">
+      <v-skeleton-loader type="card-avatar, article" elevation="0"></v-skeleton-loader>
+    </v-col>
+    <v-col cols="12" md="9">
+      <v-skeleton-loader type="article, article" class="mb-4" elevation="0"></v-skeleton-loader>
     </v-col>
   </v-row>
-  <v-container fluid>
-    <!-- Dynamic Sections based on Config -->
-    <v-row>
-      <v-col cols="3" md="3" sm="12">
-        <v-card variant="outlined" elevation="0" class="bg-surface" rounded="lg">
-          <v-card-item class="pa-5 text-center">
+
+  <!-- Error State -->
+  <v-row v-else-if="error" class="justify-center">
+    <v-col cols="12" md="8">
+      <v-card rounded="md" variant="flat" color="white" class="pa-8 text-center">
+        <v-icon size="80" color="error" class="mb-4">mdi-alert-circle-outline</v-icon>
+        <h2 class="text-h5 mb-3">Oops! Something went wrong</h2>
+        <p class="text-body-1 text-medium-emphasis mb-6">{{ error }}</p>
+        <v-btn color="primary" size="large" rounded="md" @click="router.push({ name: 'StudentList' })">
+          <v-icon start>mdi-arrow-left</v-icon>
+          Back to Student List
+        </v-btn>
+      </v-card>
+    </v-col>
+  </v-row>
+
+  <!-- Main Content -->
+  <v-row v-else>
+    <!-- Sidebar Profile Card -->
+    <v-col cols="12" md="3" class="mb-4">
+      <v-card rounded="md" class="mb-4 v-card--variant-outlined" variant="flat" color="white">
+        <!-- Profile Header -->
+        <v-sheet
+          color="primary"
+          class="pa-6 text-center rounded-md position-relative overflow-hidden"
+          style="border-bottom-left-radius: 0 !important; border-bottom-right-radius: 0 !important"
+        >
+          <!-- Background Decorative Elements - Choose one style below -->
+          <!-- Style Option 1: Waves Pattern -->
+          <div class="bg-decoration">
+            <svg class="wave-pattern" viewBox="0 0 1200 120" preserveAspectRatio="none">
+              <path
+                d="M321.39,56.44c58-10.79,114.16-30.13,172-41.86,82.39-16.72,168.19-17.73,250.45-.39C823.78,31,906.67,72,985.66,92.83c70.05,18.48,146.53,26.09,214.34,3V0H0V27.35A600.21,600.21,0,0,0,321.39,56.44Z"
+                fill="rgba(255,255,255,0.1)"
+              ></path>
+            </svg>
+          </div>
+
+          <div class="position-relative d-inline-block mb-4" style="z-index: 1">
             <v-progress-circular
-              :model-value="studentData.profile_completion_per"
-              :rotate="195"
-              :size="150"
-              :width="10"
-              color="success"
-              bg-color="#E9F0FF"
+              :model-value="studentData.profile_completion_per || 0"
+              :rotate="-90"
+              :size="mobileScreen ? 110 : 130"
+              :width="6"
+              color="white"
             >
-              <v-avatar :size="130" color="#fff" variant="tonal" class="elevation-5">
-                <v-img v-if="studentData.gender === 'Male'" :src="male" :alt="studentData.gender" :size="90" class="mt-1" />
-                <v-img v-else="studentData.gender === 'Female'" :src="female" :alt="studentData.gender" :size="90" class="mt-5" />
-                <!-- <span v-else class="text-body-1 font-weight-bold"> -- </span> -->
+              <v-avatar :size="mobileScreen ? 96 : 114" class="">
+                <v-img v-if="studentData.gender === 'Male'" :src="male" :alt="studentData.gender" cover />
+                <v-img v-else-if="studentData.gender === 'Female'" :src="female" :alt="studentData.gender" cover />
+                <v-icon v-else :size="mobileScreen ? 50 : 60">mdi-account</v-icon>
               </v-avatar>
             </v-progress-circular>
-            <div>
-              <v-chip color="secondary" size="small" variant="flat" class="mt-1 text-center font-weight-bold">
-                {{ studentData.profile_completion_per?.toFixed(0) }} %
-              </v-chip>
-            </div>
-            <h3 class="text-center mt-3">{{ studentData.name }}</h3>
-            <p class="text-center text-subtitle-1 font-weight-medium my-2">#{{ studentData.student_id }}</p>
-            <v-divider></v-divider>
+            <v-chip color="success" size="x-small" variant="flat" class="completion-badge">
+              {{ Math.round(studentData.profile_completion_per || 0) }}%
+            </v-chip>
+          </div>
 
-            <div class="d-sm-flex align-center justify-space-between">
-              <v-card-title class="text-subtitle-1 justify-center" style="line-height: 1.57"></v-card-title>
-              <slot name="action"></slot>
+          <div style="position: relative; z-index: 1">
+            <h3 class="text-h5 font-weight-bold mb-2 text-white">{{ studentData.name || '' }}</h3>
+            <v-chip size="small" variant="tonal" color="white" class="mb-2"> #{{ studentData.student_id || 'N/A' }} </v-chip>
+            <div class="d-flex align-center justify-center mt-3">
+              <v-icon size="x-small" color="white" class="mr-1" :icon="mdiClockOutline"></v-icon>
+              <span class="text-caption text-white">Last Active: Just Now</span>
             </div>
-          </v-card-item>
-          <v-card-text>
-            <v-tabs v-model="profileTab" color="primary" direction="vertical">
-              <v-tab
-                v-for="section in studentProfileConfig"
+          </div>
+        </v-sheet>
+
+        <!-- Contact Info -->
+        <v-card-text class="pa-4">
+          <v-list density="compact" class="bg-transparent">
+            <v-list-item v-if="studentData.mobile" class="px-0 mb-2">
+              <template #prepend>
+                <v-avatar color="primary" size="40" class="mr-3">
+                  <v-icon size="18" :icon="mdiPhoneOutline"></v-icon>
+                </v-avatar>
+              </template>
+              <v-list-item-title class="text-caption text-medium-emphasis">Phone Number</v-list-item-title>
+              <v-list-item-subtitle class="text-body-2 font-weight-medium">+91 {{ studentData.mobile }}</v-list-item-subtitle>
+            </v-list-item>
+
+            <v-list-item v-if="studentData.email" class="px-0 mb-2">
+              <template #prepend>
+                <v-avatar color="secondary" size="40" class="mr-3">
+                  <v-icon size="18" :icon="mdiEmailOutline"></v-icon>
+                </v-avatar>
+              </template>
+              <v-list-item-title class="text-caption text-medium-emphasis">Email Address</v-list-item-title>
+              <v-list-item-subtitle class="text-body-2 font-weight-medium text-truncate">{{ studentData.email }}</v-list-item-subtitle>
+            </v-list-item>
+
+            <v-list-item v-if="studentData.class_name" class="px-0 mb-2">
+              <template #prepend>
+                <v-avatar color="success" size="40" class="mr-3">
+                  <v-icon size="18" :icon="mdiAccountSchool"></v-icon>
+                </v-avatar>
+              </template>
+              <v-list-item-title class="text-caption text-medium-emphasis">Class & Board</v-list-item-title>
+              <v-list-item-subtitle class="text-body-2 font-weight-medium"
+                >{{ studentData.class_name }} - {{ studentData.board_name }}</v-list-item-subtitle
+              >
+            </v-list-item>
+
+            <v-list-item v-if="studentData.city" class="px-0">
+              <template #prepend>
+                <v-avatar color="info" size="40" class="mr-3">
+                  <v-icon size="18" :icon="mdiMapMarkerOutline"></v-icon>
+                </v-avatar>
+              </template>
+              <v-list-item-title class="text-caption text-medium-emphasis">Location</v-list-item-title>
+              <v-list-item-subtitle class="text-body-2 font-weight-medium"
+                >{{ studentData.city }}, {{ studentData.state }}</v-list-item-subtitle
+              >
+            </v-list-item>
+          </v-list>
+        </v-card-text>
+      </v-card>
+
+      <!-- Quick Navigation -->
+      <v-sheet class="bg-transparent profile-sidebar" sticky>
+        <v-card rounded="md" class="mb-4 v-card--variant-outlined" variant="flat" color="white">
+          <v-card-title class="d-flex align-center">
+            <span class="text-subtitle-1">Quick Navigation</span>
+          </v-card-title>
+          <v-divider></v-divider>
+          <v-card-text class="pa-2">
+            <v-list density="compact" class="bg-transparent">
+              <v-list-item
+                v-for="(section, idx) in pageConfig.studentProfileConfig"
                 :key="section.sectionKey"
-                :text="section.title"
-                :value="section.sectionKey"
-              ></v-tab>
-            </v-tabs>
+                rounded="md"
+                @click="scrollToSection(section.sectionKey)"
+                class="mb-1"
+              >
+                <template #prepend>
+                  <v-chip size="small" color="primary" variant="flat" class="mr-2">
+                    {{ String(Number(idx) + 1).padStart(2, '0') }}
+                  </v-chip>
+                </template>
+                <v-list-item-title class="text-body-2">{{ section.title }}</v-list-item-title>
+                <!-- <template #append>
+                  <v-icon size="small" color="primary" :icon="mdiChevronRight"></v-icon>
+                </template> -->
+              </v-list-item>
+            </v-list>
           </v-card-text>
         </v-card>
-      </v-col>
-      <v-col cols="8" md="8" sm="12" xs="12">
-        <v-tabs-window v-model="profileTab">
-          <v-tabs-window-item v-for="section in studentProfileConfig" :key="section.sectionKey" :value="section.sectionKey">
-            <UiParentCard :title="section.title">
-              <template #action>
-                <v-btn
-                  v-if="section.dialogComponent"
-                  icon="mdi-pencil"
-                  variant="text"
-                  size="small"
-                  @click="openDialog(section.sectionKey)"
-                />
-              </template>
-              <v-row>
-                <ConfigField v-for="field in section.fields" :key="field.data" :config="field" :data="studentData"> </ConfigField>
-              </v-row>
-              <v-divider class="my-4" />
-              <div v-if="section.dialogComponent" class="d-flex justify-end">
-                <v-btn color="primary" @click="openDialog(section.sectionKey)">
-                  <i class="profile--btn pa-1 text-subtitle-1" v-html="getFeatherIcon('edit-2')"></i>
-                  Edit</v-btn
-                >
+      </v-sheet>
+    </v-col>
+
+    <!-- Main Content -->
+    <v-col cols="12" md="9">
+      <v-card
+        v-for="(section, index) in pageConfig.studentProfileConfig"
+        :key="section.sectionKey"
+        :id="section.sectionKey"
+        class="mb-4 v-card--variant-outlined"
+        variant="flat"
+        color="white"
+      >
+        <v-card-item class="pa-4">
+          <div class="d-flex align-center justify-space-between flex-wrap">
+            <div class="d-flex align-center">
+              <v-chip color="primary" variant="flat" size="large" class="mr-3">
+                {{ String(Number(index) + 1).padStart(2, '0') }}
+              </v-chip>
+              <div>
+                <v-card-title class="pa-0 text-h5">{{ section.title }}</v-card-title>
               </div>
-            </UiParentCard>
-          </v-tabs-window-item>
-        </v-tabs-window>
-      </v-col>
-      <!-- <v-col cols="9">
-        <UiParentCard :title="section.title">
-          <template #action>
-            <v-btn v-if="section.dialogComponent" icon="mdi-pencil" variant="text" size="small" @click="openDialog(section.sectionKey)" />
-          </template>
-          <v-row>
-            <ConfigField v-for="field in section.fields" :key="field.data" :config="field" :data="studentData"> </ConfigField>
-          </v-row>
-          <v-divider class="my-4" />
-          <div v-if="section.dialogComponent" class="d-flex justify-end">
-            <v-btn color="primary" @click="openDialog(section.sectionKey)">
-              <i class="profile--btn pa-1 text-subtitle-1" v-html="getFeatherIcon('edit-2')"></i>
-              Edit</v-btn
-            >
+            </div>
+            <v-btn v-if="section.dialogComponent" color="primary" size="small" rounded="md" @click="openDialog(section.sectionKey)">
+              <v-icon :icon="mdiPencil" size="small"></v-icon>
+              <span class="d-none d-sm-inline ml-1">Edit</span>
+            </v-btn>
           </div>
-        </UiParentCard>
-      </v-col> -->
-    </v-row>
+        </v-card-item>
 
-    <!-- Action Buttons -->
-    <v-row>
-      <v-col cols="12">
-        <div class="d-flex gap-3 justify-end">
-          <v-btn variant="outlined" color="info" prepend-icon="mdi-account-plus"> Link Another Child </v-btn>
-          <v-btn variant="outlined" color="success" prepend-icon="mdi-check" size="large"> Submit Registration </v-btn>
-        </div>
-      </v-col>
-    </v-row>
+        <v-divider></v-divider>
 
-    <!-- Dialogs -->
-    <BasicDetailsDialog v-model="basicDetailsDialog" :data="studentData" @save="saveSectionData('basic', $event)" />
-    <AcademicDetailsDialog v-model="academicDetailsDialog" :data="studentData" @save="saveSectionData('academic', $event)" />
-    <AddressDetailsDialog v-model="addressDetailsDialog" :data="studentData" @save="saveSectionData('address', $event)" />
-    <TutoringPreferencesDialog v-model="tutoringPreferencesDialog" :data="studentData" @save="saveSectionData('tutoring', $event)" />
-    <TutorPreferencesDialog v-model="tutorPreferencesDialog" :data="studentData" @save="saveSectionData('tutorPrefs', $event)" />
-    <ParentDetailsDialog v-model="parentDetailsDialog" :data="studentData" @save="saveSectionData('parent', $event)" />
-    <ReferralDialog v-model="referralDialog" :data="studentData" @save="saveSectionData('referral', $event)" />
-    <AdditionalDetailsDialog v-model="additionalDetailsDialog" :data="studentData" @save="saveSectionData('additional', $event)" />
-  </v-container>
+        <v-card-text class="pa-4 pa-md-6">
+          <v-row>
+            <ConfigField v-for="field in section.fields" :key="field.data" :config="field" :data="studentData"></ConfigField>
+          </v-row>
+
+          <div v-if="section.dialogComponent" class="d-flex justify-center mt-6 d-md-none">
+            <v-btn color="primary" variant="flat" block size="large" rounded="md" @click="openDialog(section.sectionKey)">
+              <v-icon start :icon="mdiPencil"></v-icon>
+              Edit {{ section.title }}
+            </v-btn>
+          </div>
+        </v-card-text>
+      </v-card>
+    </v-col>
+  </v-row>
+
+  <!-- Dialogs -->
+  <BasicDetailsDialog v-model="basicDetailsDialog" :data="studentData" @save="saveSectionData('basic', $event)" />
+  <AcademicDetailsDialog v-model="academicDetailsDialog" :data="studentData" @save="saveSectionData('academic', $event)" />
+  <AddressDetailsDialog v-model="addressDetailsDialog" :data="studentData" @save="saveSectionData('address', $event)" />
+  <TutoringPreferencesDialog v-model="tutoringPreferencesDialog" :data="studentData" @save="saveSectionData('tutoring', $event)" />
+  <TutorPreferencesDialog v-model="tutorPreferencesDialog" :data="studentData" @save="saveSectionData('tutorPrefs', $event)" />
+  <ParentDetailsDialog v-model="parentDetailsDialog" :data="studentData" @save="saveSectionData('parent', $event)" />
+  <ReferralDialog v-model="referralDialog" :data="studentData" @save="saveSectionData('referral', $event)" />
+  <AdditionalDetailsDialog v-model="additionalDetailsDialog" :data="studentData" @save="saveSectionData('additional', $event)" />
 </template>
 
-<style scoped>
-.gap-3 {
-  gap: 12px;
+<style scoped lang="scss">
+.profile-sidebar {
+  position: sticky;
+  top: 80px;
 }
 
-.profile--btn {
-  height: 24px;
-  width: 24px;
-  border-radius: 8px;
-  margin: 1px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  background-color: rgb(var(--btn-color), 0.2);
-  .feather {
-    height: 12px !important;
-    width: 12px !important;
-    color: rgb(var(--btn-color), 1);
+.completion-badge {
+  position: absolute;
+  bottom: 5px;
+  right: 5px;
+}
+
+// Background Decorative Elements - Base
+.bg-decoration {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  z-index: 0;
+  pointer-events: none;
+}
+
+// ============================================
+// Style Option 1: Waves Pattern (Active)
+// ============================================
+.wave-pattern {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0.6;
+}
+
+// ============================================
+// Style Option 2: Geometric Shapes
+// ============================================
+.geometric-shape {
+  position: absolute;
+  background: rgba(255, 255, 255, 0.1);
+
+  &.shape-1 {
+    width: 120px;
+    height: 120px;
+    top: -40px;
+    right: -30px;
+    border-radius: 30% 70% 70% 30% / 30% 30% 70% 70%;
+    transform: rotate(45deg);
+  }
+
+  &.shape-2 {
+    width: 80px;
+    height: 80px;
+    bottom: -20px;
+    left: -15px;
+    border-radius: 63% 37% 54% 46% / 55% 48% 52% 45%;
+  }
+
+  &.shape-3 {
+    width: 60px;
+    height: 60px;
+    top: 30%;
+    right: 10%;
+    clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
+    background: rgba(255, 255, 255, 0.08);
+  }
+
+  &.shape-4 {
+    width: 40px;
+    height: 40px;
+    bottom: 30%;
+    left: 10%;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.06);
+  }
+}
+
+// ============================================
+// Style Option 3: Gradient Overlay
+// ============================================
+.gradient-overlay {
+  width: 100%;
+  height: 100%;
+  background: radial-gradient(circle at top right, rgba(255, 255, 255, 0.2) 0%, transparent 60%),
+    radial-gradient(circle at bottom left, rgba(255, 255, 255, 0.15) 0%, transparent 50%);
+}
+
+// ============================================
+// Style Option 4: Dots Pattern
+// ============================================
+.dots-pattern {
+  width: 100%;
+  height: 100%;
+  background-image: radial-gradient(rgba(255, 255, 255, 0.15) 1px, transparent 1px);
+  background-size: 20px 20px;
+  background-position:
+    0 0,
+    10px 10px;
+}
+
+@media (max-width: 960px) {
+  .profile-sidebar {
+    position: relative;
+    top: 0;
+  }
+
+  // Adjust geometric shapes for mobile
+  .geometric-shape {
+    &.shape-1 {
+      width: 100px;
+      height: 100px;
+    }
+
+    &.shape-2 {
+      width: 60px;
+      height: 60px;
+    }
   }
 }
 </style>

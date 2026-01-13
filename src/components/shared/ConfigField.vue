@@ -1,6 +1,19 @@
 <script setup lang="ts">
 import { computed } from 'vue';
-import type { FieldConfig } from '@/configs/student/student_profile';
+
+interface FieldConfig {
+  data: string;
+  label: string;
+  fieldType?: string;
+  cols?: number | string;
+  class?: string;
+  formatType?: string;
+  required?: boolean;
+  helpText?: string;
+  condition?: (data: any) => boolean;
+  defaultValue?: any;
+}
+
 import $keys from '@/utils/keys';
 
 const props = defineProps<{
@@ -48,34 +61,38 @@ const shouldShow = computed(() => {
 </script>
 
 <template>
-  <v-col v-if="shouldShow" :cols="config.cols || 3" :md="config.cols || 3">
-    <div v-if="config.fieldType === 'Avatar'" class="text-center">
-      <v-avatar size="120" class="mb-3">
+  <v-col v-if="shouldShow" cols="12" :md="config.cols || 3">
+    <v-card v-if="config.fieldType === 'Avatar'" variant="flat" class="text-center">
+      <v-avatar size="120" class="elevation-4">
         <v-img v-if="fieldValue" :src="fieldValue" />
-        <v-icon v-else size="60">mdi-account</v-icon>
+        <v-icon v-else size="60" color="primary">mdi-account</v-icon>
       </v-avatar>
-    </div>
-    <div v-else>
-      <div class="text-caption text-medium-emphasis mb-1">
-        {{ config.label }}
-        <span v-if="config.required" class="text-error">*</span>
+    </v-card>
+
+    <v-card v-else rounded="sm" variant="tonal" color="secondary" class="pa-3" :class="config.class">
+      <div class="mb-2">
+        <span class="text-caption">
+          {{ config.label }}
+        </span>
+        <!-- <v-chip v-if="config.required" color="error" size="x-small" class="ml-1">*</v-chip> -->
       </div>
-      <div class="text-body-1 mb-4" :class="config.class" v-if="config.fieldType === $keys.CUSTOM">
+
+      <div v-if="config.fieldType === $keys.CUSTOM">
         <slot :name="config.label" v-bind="{ item: data, config: config }" />
       </div>
-      <div v-else class="text-body-1 mb-4" :class="config.class">
-        {{ data[config.data] }}
 
-        <!-- <template v-if="config.fieldType === 'Display' && config.data === 'name'">
-          {{ data[config.data] }}
-        </template>
-        <template v-else>
-          {{ data[config.data] }}
-        </template> -->
+      <div v-else>
+        <div v-if="displayValue === 'Not provided'" class="text-body-2 text-medium-emphasis d-flex align-center">
+          <v-icon size="x-small" class="mr-1">mdi-minus-circle-outline</v-icon>
+          {{ displayValue }}
+        </div>
+        <div v-else class="text-body-1 font-weight-medium">{{ displayValue }}</div>
       </div>
-      <div v-if="config.helpText" class="text-caption text-medium-emphasis">
+
+      <div v-if="config.helpText" class="text-caption text-medium-emphasis mt-2 d-flex align-center">
+        <v-icon size="x-small" class="mr-1">mdi-information-outline</v-icon>
         {{ config.helpText }}
       </div>
-    </div>
+    </v-card>
   </v-col>
 </template>

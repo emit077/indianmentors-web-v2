@@ -4,18 +4,16 @@ import { useRouter } from 'vue-router';
 import { createDebouncedSearch, api } from '@/utils/api/axios';
 import CommonHelpers from '@/utils/helpers/helper-functions';
 import { encrypt } from '@/utils/helpers/crypto';
-import { mdiPlus, mdiPhone, mdiArrowRight } from '@mdi/js';
+import { mdiPlus, mdiPhone, mdiArrowRight, mdiTrayArrowDown, mdiTuneVariant } from '@mdi/js';
 
 import URLS from '@/utils/urls';
-import { mdiTrayArrowDown, mdiTuneVariant } from '@mdi/js';
 import ProfileCard from '@/components/shared/ProfileCard.vue';
 import ProfileList from '@/components/shared/ProfileList.vue';
 import DataTable from '@/components/datatable/DataTable.vue';
 import DtListTabbedUI from '@/components/datatable/DtListTabbedUI.vue';
 import ComponentTitle from '@/components/shared/ComponentTitle.vue';
-
-import { profileCardConfig, profileListConfig, headers } from './config/student_list';
-
+import SvgSprite from '@/components/shared/SvgSprite.vue';
+import pageConfig from './config/student_list';
 // Router setup
 const router = useRouter();
 
@@ -71,7 +69,7 @@ onMounted(async () => {
 </script>
 
 <template>
-  <ComponentTitle title="Students" subContent="Manage and view all student profiles" />
+  <ComponentTitle :config="pageConfig.pageHeaderConfig" />
   <!-- Search and Filter Section -->
   <v-row class="mb-4">
     <v-col cols="12" md="5" class="order-2 order-md-1">
@@ -121,7 +119,7 @@ onMounted(async () => {
       <!-- Table Section -->
       <template #table>
         <DataTable
-          :headers="headers"
+          :headers="pageConfig.dataTableConfig.headers"
           :items="studentList"
           :total-items="totalItems"
           :loading="searchLoading"
@@ -162,7 +160,7 @@ onMounted(async () => {
       <!-- List Section -->
       <template #list>
         <div v-for="data in studentList" :key="data.user_table_id">
-          <ProfileList :config="profileListConfig" :data="data">
+          <ProfileList :config="pageConfig.profileListConfig" :data="data">
             <template #actionBtn="{ item, con }">
               <div class="mb-3 text-right">
                 <v-btn
@@ -182,7 +180,7 @@ onMounted(async () => {
       <template #card>
         <v-row no-gutters>
           <v-col cols="12" md="4" class="pa-1" v-for="data in studentList" :key="data.user_table_id">
-            <ProfileCard :config="profileCardConfig" :data="data">
+            <ProfileCard :config="pageConfig.profileCardConfig" :data="data">
               <template #classAndBoard="{ item, con }">
                 <div class="">
                   <div class="text-caption text-medium-emphasis mb-1">Class & board</div>
