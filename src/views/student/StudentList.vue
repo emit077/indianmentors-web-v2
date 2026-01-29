@@ -73,15 +73,8 @@ onMounted(async () => {
   <!-- Search and Filter Section -->
   <v-row class="mb-4">
     <v-col cols="12" md="5" class="order-2 order-md-1">
-      <v-text-field
-        v-model="searchQuery"
-        placeholder="Search students..."
-        variant="outlined"
-        clearable
-        hide-details
-        @update:model-value="handleSearch"
-        @keyup.enter="handleSearch"
-      >
+      <v-text-field v-model="searchQuery" placeholder="Search students..." variant="outlined" clearable hide-details
+        @update:model-value="handleSearch" @keyup.enter="handleSearch">
         <template v-slot:prepend-inner>
           <div class="text-lightText d-flex align-center">
             <SvgSprite name="custom-search" style="width: 16px; height: 16px" />
@@ -91,20 +84,14 @@ onMounted(async () => {
     </v-col>
     <v-col cols="12" md="7" class="justify-end d-flex order-1 order-md-2">
       <slot name="tableController">
-        <v-btn class="" color="primary" size="small" :icon="mdiTuneVariant" rounded="sm" variant="tonal" title="Filter"> </v-btn>
-        <v-btn class="mx-2" color="primary" size="small" rounded="sm" variant="tonal" :icon="mdiTrayArrowDown" title="Download"> </v-btn>
+        <v-btn class="" color="primary" size="small" :icon="mdiTuneVariant" rounded="sm" variant="tonal" title="Filter">
+        </v-btn>
+        <v-btn class="mx-2" color="primary" size="small" rounded="sm" variant="tonal" :icon="mdiTrayArrowDown"
+          title="Download"> </v-btn>
         <v-tooltip location="top" color="red">
           <template v-slot:activator="{ props }">
-            <v-btn
-              v-bind="props"
-              color="primary"
-              size="small"
-              variant="flat"
-              rounded="sm"
-              :icon="mdiPlus"
-              @click="router.push('/student/add')"
-              title="Add New Student"
-            >
+            <v-btn v-bind="props" color="primary" size="small" variant="flat" rounded="sm" :icon="mdiPlus"
+              @click="router.push('/student/add')" title="Add New Student">
             </v-btn>
           </template>
           <span>Add New Student</span>
@@ -118,38 +105,23 @@ onMounted(async () => {
     <DtListTabbedUI>
       <!-- Table Section -->
       <template #table>
-        <DataTable
-          :headers="pageConfig.dataTableConfig.headers"
-          :items="studentList"
-          :total-items="totalItems"
-          :loading="searchLoading"
-          :items-per-page="itemsPerPage"
-          :search="searchQuery"
-          item-value="user_table_id"
+        <DataTable :headers="pageConfig.dataTableConfig.headers" :items="studentList" :total-items="totalItems"
+          :loading="searchLoading" :items-per-page="itemsPerPage" :search="searchQuery" item-value="user_table_id"
           search-placeholder="Search students..."
-          no-data-message="No students found. Try adjusting your search criteria or add your first student."
-        >
+          no-data-message="No students found. Try adjusting your search criteria or add your first student.">
           <template #item.class_name="{ item }">
             <div>
-              <span class="text-body-2 font-weight-medium"> {{ item.class_name }} - {{ item.board_name?.toUpperCase() || '' }} </span>
+              <span class="text-body-2 font-weight-medium"> {{ item.class_name }} - {{ item.board_name?.toUpperCase() ||
+                '' }} </span>
             </div>
           </template>
           <!-- Action Buttons -->
           <template #item.DT_BTNS="{ item }">
             <div>
-              <v-btn
-                size="small"
-                color="primary"
-                variant="tonal"
-                :icon="mdiPhone"
-                title="Call"
-                @click="CommonHelpers.launchDialpad(item.mobile)"
-              ></v-btn>
-              <RouterLink
-                class="ml-2"
-                :to="{ name: 'StudentProfile', params: { id: encrypt(item.id) } }"
-                style="text-decoration: none; display: inline-block"
-              >
+              <v-btn size="small" color="primary" variant="tonal" :icon="mdiPhone" title="Call"
+                @click="CommonHelpers.launchDialpad(item.mobile)"></v-btn>
+              <RouterLink class="ml-2" :to="{ name: 'StudentProfile', params: { id: encrypt(item.id) } }"
+                style="text-decoration: none; display: inline-block">
                 <v-btn size="small" color="primary" variant="tonal" :icon="mdiArrowRight" title="View Profile"></v-btn>
               </RouterLink>
             </div>
@@ -163,12 +135,8 @@ onMounted(async () => {
           <ProfileList :config="pageConfig.profileListConfig" :data="data">
             <template #actionBtn="{ item, con }">
               <div class="mb-3 text-right">
-                <v-btn
-                  width="x-small"
-                  color="primary"
-                  variant="outlined"
-                  :to="{ name: 'StudentProfile', params: { id: encrypt(item.id) } }"
-                >
+                <v-btn width="x-small" color="primary" variant="outlined"
+                  :to="{ name: 'StudentProfile', params: { id: encrypt(item.id) } }">
                   visit Profile
                 </v-btn>
               </div>
@@ -184,14 +152,17 @@ onMounted(async () => {
               <template #classAndBoard="{ item, con }">
                 <div class="">
                   <div class="text-caption text-medium-emphasis mb-1">Class & board</div>
-                  <div class="text-subtitle-2 text-truncate">{{ item.class_name }} - {{ item.board_name?.toUpperCase() }}</div>
+                  <div class="text-subtitle-2 text-truncate">{{ item.class_name }} - {{ item.board_name?.toUpperCase()
+                    }}</div>
                 </div>
               </template>
 
               <template #actionBtn="{ item, con }">
                 <div class="mb-3 d-flex justify-space-between">
-                  <v-btn color="primary" variant="outlined" width="48%" @click="CommonHelpers.launchDialpad(item.mobile)"> Call</v-btn>
-                  <v-btn color="primary" variant="outlined" width="48%" :to="{ name: 'StudentProfile', params: { id: encrypt(item.id) } }">
+                  <v-btn color="primary" variant="outlined" width="48%"
+                    @click="CommonHelpers.launchDialpad(item.mobile)"> Call</v-btn>
+                  <v-btn color="primary" variant="outlined" width="48%"
+                    :to="{ name: 'StudentProfile', params: { id: encrypt(item.id) } }">
                     visit Profile
                   </v-btn>
                 </div>
@@ -214,18 +185,8 @@ onMounted(async () => {
       <span class="font-weight-bold px-1"> {{ totalItems }} </span>
     </v-col>
     <v-col cols="12" md="6" class="justify-center justify-md-end d-flex">
-      <v-pagination
-        class="dt_table_pagination"
-        active-color="primary"
-        color="secondary"
-        variant="text"
-        size="small"
-        rounded
-        v-model="page"
-        :length="totalPages"
-        :total-visible="7"
-        @update:model-value="searchFunction(searchQuery)"
-      ></v-pagination
-    ></v-col>
+      <v-pagination class="dt_table_pagination" active-color="primary" color="secondary" variant="text" size="small"
+        rounded v-model="page" :length="totalPages" :total-visible="7"
+        @update:model-value="searchFunction(searchQuery)"></v-pagination></v-col>
   </v-row>
 </template>

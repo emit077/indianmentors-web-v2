@@ -1,15 +1,17 @@
 <template>
   <v-container fluid class="chat-container pa-0">
     <!-- WebSocket Status Banner -->
-    <v-alert v-if="!chatStore.websocketAvailable && chatStore.websocketEnabled" type="info" variant="tonal"
-      density="compact" closable class="alert-banner">
-      <div class="d-flex align-center">
-        <v-icon size="small" class="mr-2">mdi-information</v-icon>
-        <span class="text-caption">
-          Live chat unavailable. Using REST API mode - click refresh to see new messages.
-        </span>
-      </div>
-    </v-alert>
+    <!-- <div class="alert-banner text-info border-info" v-if="!chatStore.websocketAvailable && chatStore.websocketEnabled">
+      <v-icon size="small" class="mr-2">mdi-information</v-icon>
+      <span class="text-caption">
+        Live chat unavailable. Using REST API mode - click refresh to see new messages.
+      </span>
+    </div> -->
+
+    <v-banner v-if="!chatStore.websocketAvailable && chatStore.websocketEnabled" class="bg-info font-weight-medium"
+      lines="one" style="flex: unset !important;" :icon="mdiInformation" color="info"
+      text="Live chat unavailable. Using REST API mode - click refresh to see new messages." :stacked="false">
+    </v-banner>
 
     <v-row no-gutters class="chat-row"
       :class="{ 'with-alert': !chatStore.websocketAvailable && chatStore.websocketEnabled }">
@@ -69,7 +71,7 @@
 
                 <v-list-item-title class="text-body-1 font-weight-medium opacity-70">{{
                   getConversationName(conversation)
-                }}
+                  }}
                   <div class="text-caption">{{ formatTime(conversation.last_message?.created_at) }}</div>
 
 
@@ -155,6 +157,14 @@
             </div>
 
             <div v-else class="messages-list pa-4">
+              <!-- Load More Button -->
+              <div v-if="chatStore.hasMoreMessages" class="text-center mb-4">
+                <v-btn variant="outlined" size="small" color="primary" :loading="loadingMoreMessages"
+                  @click="loadMoreMessages" prepend-icon="mdi-chevron-up">
+                  Load Earlier Messages
+                </v-btn>
+              </div>
+
               <div v-for="(message, index) in messages" :key="message.id"
                 :class="['message-wrapper', message.sender.id === currentUserId ? 'message-sent' : 'message-received']">
                 <div class="message-bubble">
@@ -237,7 +247,7 @@ import { useAuthStore } from '@/stores/auth';
 import { useChatStore } from '@/stores/chat';
 import { useUserSearch } from '@/composables/useChat';
 import { formatDistanceToNow } from '@/utils/dateUtils';
-import { mdiSend, mdiMagnify } from '@mdi/js';
+import { mdiSend, mdiInformation } from '@mdi/js';
 
 // Stores 
 const authStore = useAuthStore();
@@ -257,6 +267,7 @@ const newGroupName = ref('');
 const selectedUsers = ref<any[]>([]);
 const loadingConversations = ref(false);
 const loadingMessages = ref(false);
+const loadingMoreMessages = ref(false);
 
 // Computed
 const currentUserId = computed(() => authStore.user?.id || authStore.user?.user_id);
@@ -330,6 +341,33 @@ const scrollToBottom = () => {
       top: messagesContainer.value.scrollHeight,
       behavior: 'smooth'
     });
+  }
+};
+
+const loadMoreMessages = async () => {
+  if (!selectedConversation.value || loadingMoreMessages.value) return;
+
+  loadingMoreMessages.value = true;
+
+  try {
+    // Save current scroll position
+    const container = messagesContainer.value;
+    const previousScrollHeight = container?.scrollHeight || 0;
+
+    // Load more messages
+    await chatStore.loadMoreMessages(selectedConversation.value.id);
+
+    // Restore scroll position (accounting for new content height)
+    await nextTick();
+    if (container) {
+      const newScrollHeight = container.scrollHeight;
+      const scrollDiff = newScrollHeight - previousScrollHeight;
+      container.scrollTop = scrollDiff;
+    }
+  } catch (error) {
+    console.error('Failed to load more messages:', error);
+  } finally {
+    loadingMoreMessages.value = false;
   }
 };
 
@@ -455,20 +493,11 @@ watch(() => messages.value.length, () => {
   flex-direction: column;
 }
 
-.alert-banner {
-  flex-shrink: 0;
-  margin: 8px;
-  margin-bottom: 0;
-}
 
 .chat-row {
   flex: 1;
   min-height: 0;
   overflow: hidden;
-
-  &.with-alert {
-    height: calc(100% - 52px);
-  }
 }
 
 // Conversations Sidebar
@@ -517,7 +546,12 @@ watch(() => messages.value.length, () => {
   flex: 1;
   overflow-y: auto;
   overflow-x: hidden;
-  background-color: #f5f5f5;
+  background-image: url('@/assets/images/chat/chat-bg.png');
+  background-size: 400px;
+  background-position: center center;
+  background-repeat: repeat;
+  background-attachment: scroll;
+  background-size: cover;
 }
 
 .messages-list {
@@ -577,7 +611,7 @@ watch(() => messages.value.length, () => {
 .message-bubble {
   max-width: 70%;
   padding: 12px 16px;
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
 }
 
 .message-sender {

@@ -150,30 +150,21 @@ const scrollToSection = (sectionKey: string) => {
     <v-col cols="12" md="3" class="mb-4">
       <v-card rounded="md" class="mb-4 v-card--variant-outlined" variant="flat" color="white">
         <!-- Profile Header -->
-        <v-sheet
-          color="primary"
-          class="pa-6 text-center rounded-md position-relative overflow-hidden"
-          style="border-bottom-left-radius: 0 !important; border-bottom-right-radius: 0 !important"
-        >
+        <v-sheet color="primary" class="pa-6 text-center rounded-md position-relative overflow-hidden"
+          style="border-bottom-left-radius: 0 !important; border-bottom-right-radius: 0 !important">
           <!-- Background Decorative Elements - Choose one style below -->
           <!-- Style Option 1: Waves Pattern -->
           <div class="bg-decoration">
             <svg class="wave-pattern" viewBox="0 0 1200 120" preserveAspectRatio="none">
               <path
                 d="M321.39,56.44c58-10.79,114.16-30.13,172-41.86,82.39-16.72,168.19-17.73,250.45-.39C823.78,31,906.67,72,985.66,92.83c70.05,18.48,146.53,26.09,214.34,3V0H0V27.35A600.21,600.21,0,0,0,321.39,56.44Z"
-                fill="rgba(255,255,255,0.1)"
-              ></path>
+                fill="rgba(255,255,255,0.1)"></path>
             </svg>
           </div>
 
           <div class="position-relative d-inline-block mb-4" style="z-index: 1">
-            <v-progress-circular
-              :model-value="studentData.profile_completion_per || 0"
-              :rotate="-90"
-              :size="mobileScreen ? 110 : 130"
-              :width="6"
-              color="white"
-            >
+            <v-progress-circular :model-value="studentData.profile_completion_per || 0" :rotate="-90"
+              :size="mobileScreen ? 110 : 130" :width="6" color="white">
               <v-avatar :size="mobileScreen ? 96 : 114" class="">
                 <v-img v-if="studentData.gender === 'Male'" :src="male" :alt="studentData.gender" cover />
                 <v-img v-else-if="studentData.gender === 'Female'" :src="female" :alt="studentData.gender" cover />
@@ -187,7 +178,8 @@ const scrollToSection = (sectionKey: string) => {
 
           <div style="position: relative; z-index: 1">
             <h3 class="text-h5 font-weight-bold mb-2 text-white">{{ studentData.name || '' }}</h3>
-            <v-chip size="small" variant="tonal" color="white" class="mb-2"> #{{ studentData.student_id || 'N/A' }} </v-chip>
+            <v-chip size="small" variant="tonal" color="white" class="mb-2"> #{{ studentData.student_id || 'N/A' }}
+            </v-chip>
             <div class="d-flex align-center justify-center mt-3">
               <v-icon size="x-small" color="white" class="mr-1" :icon="mdiClockOutline"></v-icon>
               <span class="text-caption text-white">Last Active: Just Now</span>
@@ -205,7 +197,8 @@ const scrollToSection = (sectionKey: string) => {
                 </v-avatar>
               </template>
               <v-list-item-title class="text-caption text-medium-emphasis">Phone Number</v-list-item-title>
-              <v-list-item-subtitle class="text-body-2 font-weight-medium">+91 {{ studentData.mobile }}</v-list-item-subtitle>
+              <v-list-item-subtitle class="text-body-2 font-weight-medium">+91 {{ studentData.mobile
+                }}</v-list-item-subtitle>
             </v-list-item>
 
             <v-list-item v-if="studentData.email" class="px-0 mb-2">
@@ -215,7 +208,8 @@ const scrollToSection = (sectionKey: string) => {
                 </v-avatar>
               </template>
               <v-list-item-title class="text-caption text-medium-emphasis">Email Address</v-list-item-title>
-              <v-list-item-subtitle class="text-body-2 font-weight-medium text-truncate">{{ studentData.email }}</v-list-item-subtitle>
+              <v-list-item-subtitle class="text-body-2 font-weight-medium text-truncate">{{ studentData.email
+                }}</v-list-item-subtitle>
             </v-list-item>
 
             <v-list-item v-if="studentData.class_name" class="px-0 mb-2">
@@ -225,9 +219,9 @@ const scrollToSection = (sectionKey: string) => {
                 </v-avatar>
               </template>
               <v-list-item-title class="text-caption text-medium-emphasis">Class & Board</v-list-item-title>
-              <v-list-item-subtitle class="text-body-2 font-weight-medium"
-                >{{ studentData.class_name }} - {{ studentData.board_name }}</v-list-item-subtitle
-              >
+              <v-list-item-subtitle class="text-body-2 font-weight-medium">{{ studentData.class_name }} - {{
+                studentData.board_name
+                }}</v-list-item-subtitle>
             </v-list-item>
 
             <v-list-item v-if="studentData.city" class="px-0">
@@ -237,9 +231,8 @@ const scrollToSection = (sectionKey: string) => {
                 </v-avatar>
               </template>
               <v-list-item-title class="text-caption text-medium-emphasis">Location</v-list-item-title>
-              <v-list-item-subtitle class="text-body-2 font-weight-medium"
-                >{{ studentData.city }}, {{ studentData.state }}</v-list-item-subtitle
-              >
+              <v-list-item-subtitle class="text-body-2 font-weight-medium">{{ studentData.city }}, {{ studentData.state
+                }}</v-list-item-subtitle>
             </v-list-item>
           </v-list>
         </v-card-text>
@@ -254,13 +247,8 @@ const scrollToSection = (sectionKey: string) => {
           <v-divider></v-divider>
           <v-card-text class="pa-2">
             <v-list density="compact" class="bg-transparent">
-              <v-list-item
-                v-for="(section, idx) in pageConfig.studentProfileConfig"
-                :key="section.sectionKey"
-                rounded="md"
-                @click="scrollToSection(section.sectionKey)"
-                class="mb-1"
-              >
+              <v-list-item v-for="(section, idx) in pageConfig.studentProfileConfig" :key="section.sectionKey"
+                rounded="md" @click="scrollToSection(section.sectionKey)" class="mb-1">
                 <template #prepend>
                   <v-chip size="small" color="primary" variant="flat" class="mr-2">
                     {{ String(Number(idx) + 1).padStart(2, '0') }}
@@ -279,14 +267,8 @@ const scrollToSection = (sectionKey: string) => {
 
     <!-- Main Content -->
     <v-col cols="12" md="9">
-      <v-card
-        v-for="(section, index) in pageConfig.studentProfileConfig"
-        :key="section.sectionKey"
-        :id="section.sectionKey"
-        class="mb-4 v-card--variant-outlined"
-        variant="flat"
-        color="white"
-      >
+      <v-card v-for="(section, index) in pageConfig.studentProfileConfig" :key="section.sectionKey"
+        :id="section.sectionKey" class="mb-4 v-card--variant-outlined" variant="flat" color="white">
         <v-card-item class="pa-4">
           <div class="d-flex align-center justify-space-between flex-wrap">
             <div class="d-flex align-center">
@@ -297,7 +279,8 @@ const scrollToSection = (sectionKey: string) => {
                 <v-card-title class="pa-0 text-h5">{{ section.title }}</v-card-title>
               </div>
             </div>
-            <v-btn v-if="section.dialogComponent" color="primary" size="small" rounded="md" @click="openDialog(section.sectionKey)">
+            <v-btn v-if="section.dialogComponent" color="primary" size="small" rounded="md"
+              @click="openDialog(section.sectionKey)">
               <v-icon :icon="mdiPencil" size="small"></v-icon>
               <span class="d-none d-sm-inline ml-1">Edit</span>
             </v-btn>
@@ -308,11 +291,13 @@ const scrollToSection = (sectionKey: string) => {
 
         <v-card-text class="pa-4 pa-md-6">
           <v-row>
-            <ConfigField v-for="field in section.fields" :key="field.data" :config="field" :data="studentData"></ConfigField>
+            <ConfigField v-for="field in section.fields" :key="field.data" :config="field" :data="studentData">
+            </ConfigField>
           </v-row>
 
           <div v-if="section.dialogComponent" class="d-flex justify-center mt-6 d-md-none">
-            <v-btn color="primary" variant="flat" block size="large" rounded="md" @click="openDialog(section.sectionKey)">
+            <v-btn color="primary" variant="flat" block size="large" rounded="md"
+              @click="openDialog(section.sectionKey)">
               <v-icon start :icon="mdiPencil"></v-icon>
               Edit {{ section.title }}
             </v-btn>
@@ -324,13 +309,17 @@ const scrollToSection = (sectionKey: string) => {
 
   <!-- Dialogs -->
   <BasicDetailsDialog v-model="basicDetailsDialog" :data="studentData" @save="saveSectionData('basic', $event)" />
-  <AcademicDetailsDialog v-model="academicDetailsDialog" :data="studentData" @save="saveSectionData('academic', $event)" />
+  <AcademicDetailsDialog v-model="academicDetailsDialog" :data="studentData"
+    @save="saveSectionData('academic', $event)" />
   <AddressDetailsDialog v-model="addressDetailsDialog" :data="studentData" @save="saveSectionData('address', $event)" />
-  <TutoringPreferencesDialog v-model="tutoringPreferencesDialog" :data="studentData" @save="saveSectionData('tutoring', $event)" />
-  <TutorPreferencesDialog v-model="tutorPreferencesDialog" :data="studentData" @save="saveSectionData('tutorPrefs', $event)" />
+  <TutoringPreferencesDialog v-model="tutoringPreferencesDialog" :data="studentData"
+    @save="saveSectionData('tutoring', $event)" />
+  <TutorPreferencesDialog v-model="tutorPreferencesDialog" :data="studentData"
+    @save="saveSectionData('tutorPrefs', $event)" />
   <ParentDetailsDialog v-model="parentDetailsDialog" :data="studentData" @save="saveSectionData('parent', $event)" />
   <ReferralDialog v-model="referralDialog" :data="studentData" @save="saveSectionData('referral', $event)" />
-  <AdditionalDetailsDialog v-model="additionalDetailsDialog" :data="studentData" @save="saveSectionData('additional', $event)" />
+  <AdditionalDetailsDialog v-model="additionalDetailsDialog" :data="studentData"
+    @save="saveSectionData('additional', $event)" />
 </template>
 
 <style scoped lang="scss">

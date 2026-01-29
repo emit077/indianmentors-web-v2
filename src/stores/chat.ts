@@ -48,7 +48,10 @@ export const useChatStore = defineStore('chat', {
     isConnecting: false,
     baseWsUrl: import.meta.env.VITE_WS_URL || 'ws://127.0.0.1:8000',
     websocketEnabled: import.meta.env.VITE_ENABLE_WEBSOCKET !== 'false', // Can be disabled
-    websocketAvailable: true // Tracks if WebSocket server is responding
+    websocketAvailable: true, // Tracks if WebSocket server is responding
+    totalMessages: 0, // Total number of messages available
+    currentOffset: 0, // Current offset for pagination
+    messagesLimit: 50 // Number of messages to load per request
   }),
 
   getters: {
@@ -59,6 +62,10 @@ export const useChatStore = defineStore('chat', {
     isConnected: (state) => (conversationId: number) => {
       const conn = state.webSockets.get(conversationId);
       return conn?.socket?.readyState === WebSocket.OPEN;
+    },
+
+    hasMoreMessages: (state) => {
+      return state.currentOffset < state.totalMessages;
     }
   },
 
@@ -115,7 +122,12 @@ export const useChatStore = defineStore('chat', {
         );
 
         // Axios wrapper unwraps response.data.result automatically
-        this.messages = (response?.messages || response) as Message[];
+        const messagesData = response?.messages || response;
+        this.messages = (Array.isArray(messagesData) ? messagesData : []) as Message[];
+
+        // Track total and offset for pagination
+        this.totalMessages = response?.total || this.messages.length;
+        this.currentOffset = offset + this.messages.length;
 
         // Reverse to show oldest first (backend returns newest first)
         this.messages.reverse();
@@ -126,6 +138,34 @@ export const useChatStore = defineStore('chat', {
         }
       } catch (error: any) {
         console.error('Failed to load messages:', error);
+        throw error;
+      }
+    },
+
+    /**
+     * Load more (older) messages and prepend to existing messages
+     */
+    async loadMoreMessages(conversationId: number) {
+      try {
+        const response: any = await api.get(
+          `/api/chat/conversations/${conversationId}/messages/`,
+          { params: { limit: this.messagesLimit, offset: this.currentOffset } }
+        );
+
+        const messagesData = response?.messages || response;
+        const olderMessages = (Array.isArray(messagesData) ? messagesData : []) as Message[];
+
+        // Update total and offset
+        this.totalMessages = response?.total || this.totalMessages;
+        this.currentOffset += olderMessages.length;
+
+        // Reverse and prepend older messages
+        olderMessages.reverse();
+        this.messages = [...olderMessages, ...this.messages];
+
+        return olderMessages.length;
+      } catch (error: any) {
+        console.error('Failed to load more messages:', error);
         throw error;
       }
     },

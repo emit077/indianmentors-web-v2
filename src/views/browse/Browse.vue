@@ -69,15 +69,8 @@ onMounted(async () => {
   <!-- Search and Filter Section -->
   <v-row class="mb-4">
     <v-col cols="12" md="5" class="order-2 order-md-1">
-      <v-text-field
-        v-model="searchQuery"
-        :placeholder="pageConfig.SEARCH_LABEL"
-        variant="outlined"
-        clearable
-        hide-details
-        @update:model-value="handleSearch"
-        @keyup.enter="handleSearch"
-      >
+      <v-text-field v-model="searchQuery" :placeholder="pageConfig.SEARCH_LABEL" variant="outlined" clearable
+        hide-details @update:model-value="handleSearch" @keyup.enter="handleSearch">
         <template v-slot:prepend-inner>
           <div class="text-lightText d-flex align-center">
             <SvgSprite name="custom-search" style="width: 16px; height: 16px" />
@@ -87,36 +80,41 @@ onMounted(async () => {
     </v-col>
     <v-col cols="12" md="7" class="justify-end d-flex order-1 order-md-2">
       <slot name="tableController">
-        <v-btn class="" color="primary" size="small" :icon="mdiTuneVariant" rounded="sm" variant="tonal" title="Filter"> </v-btn>
-        <v-btn class="mx-2" color="primary" size="small" rounded="sm" variant="tonal" :icon="mdiTrayArrowDown" title="Download"> </v-btn>
+        <v-btn class="" color="primary" size="small" :icon="mdiTuneVariant" rounded="sm" variant="tonal" title="Filter">
+        </v-btn>
+        <v-btn class="mx-2" color="primary" size="small" rounded="sm" variant="tonal" :icon="mdiTrayArrowDown"
+          title="Download"> </v-btn>
       </slot>
     </v-col>
   </v-row>
   <!-- Search and Filter Section Ends -->
   <!-- Button Group Section -->
   <div class="text-left">
-      <!-- Card Section -->
-        <v-row no-gutters>
-          <v-col cols="12" md="4" class="pa-1" v-for="data in studentList" :key="data.user_table_id">
-            <ProfileCard :config="pageConfig.profileCardConfig" :data="data">
-              <template #classAndBoard="{ item, con }">
-                <div class="">
-                  <div class="text-caption text-medium-emphasis mb-1">Class & board</div>
-                  <div class="text-subtitle-2 text-truncate">{{ item.class_name }} - {{ item.board_name?.toUpperCase() }}</div>
-                </div>
-              </template>
+    <!-- Card Section -->
+    <v-row no-gutters>
+      <v-col cols="12" md="4" class="pa-1" v-for="data in studentList" :key="data.user_table_id">
+        <ProfileCard :config="pageConfig.profileCardConfig" :data="data">
+          <template #classAndBoard="{ item, con }">
+            <div class="">
+              <div class="text-caption text-medium-emphasis mb-1">Class & board</div>
+              <div class="text-subtitle-2 text-truncate">{{ item.class_name }} - {{ item.board_name?.toUpperCase() }}
+              </div>
+            </div>
+          </template>
 
-              <template #actionBtn="{ item, con }">
-                <div class="mb-3 d-flex justify-space-between">
-                  <v-btn color="primary" variant="outlined" width="48%" @click="CommonHelpers.launchDialpad(item.mobile)"> Call</v-btn>
-                  <v-btn color="primary" variant="outlined" width="48%" :to="{ name: 'StudentProfile', params: { id: encrypt(item.id) } }">
-                    visit Profile
-                  </v-btn>
-                </div>
-              </template>
-            </ProfileCard>
-          </v-col>
-        </v-row>
+          <template #actionBtn="{ item, con }">
+            <div class="mb-3 d-flex justify-space-between">
+              <v-btn color="primary" variant="outlined" width="48%" @click="CommonHelpers.launchDialpad(item.mobile)">
+                Call</v-btn>
+              <v-btn color="primary" variant="outlined" width="48%"
+                :to="{ name: 'StudentProfile', params: { id: encrypt(item.id) } }">
+                visit Profile
+              </v-btn>
+            </div>
+          </template>
+        </ProfileCard>
+      </v-col>
+    </v-row>
   </div>
   <!-- Pagination Section -->
   <v-row class="my-4 px-1">
@@ -129,18 +127,8 @@ onMounted(async () => {
       <span class="font-weight-bold px-1"> {{ totalItems }} </span>
     </v-col>
     <v-col cols="12" md="6" class="justify-center justify-md-end d-flex">
-      <v-pagination
-        class="dt_table_pagination"
-        active-color="primary"
-        color="secondary"
-        variant="text"
-        size="small"
-        rounded
-        v-model="page"
-        :length="totalPages"
-        :total-visible="7"
-        @update:model-value="searchFunction(searchQuery)"
-      ></v-pagination
-    ></v-col>
+      <v-pagination class="dt_table_pagination" active-color="primary" color="secondary" variant="text" size="small"
+        rounded v-model="page" :length="totalPages" :total-visible="7"
+        @update:model-value="searchFunction(searchQuery)"></v-pagination></v-col>
   </v-row>
 </template>
