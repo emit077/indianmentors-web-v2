@@ -14,20 +14,14 @@
 
               <!-- Success State -->
               <div v-else-if="isSuccess" class="mb-6">
-                <svg class="success-icon mb-4" width="64" height="64" viewBox="0 0 24 24">
-                  <circle cx="12" cy="12" r="10" fill="#4CAF50" />
-                  <path d="M9 12l2 2 4-4" stroke="white" stroke-width="2" fill="none" />
-                </svg>
+                <v-icon size="64" color="success" class="mb-4">mdi-check-circle</v-icon>
                 <h3 class="text-h6 mb-2 text-success">Sign-In Successful!</h3>
                 <p class="text-body-2 text-medium-emphasis">Welcome, {{ user?.name }}! Redirecting to dashboard...</p>
               </div>
 
               <!-- Error State -->
               <div v-else-if="isError" class="mb-6">
-                <svg class="error-icon mb-4" width="64" height="64" viewBox="0 0 24 24">
-                  <circle cx="12" cy="12" r="10" fill="#F44336" />
-                  <path d="M15 9l-6 6M9 9l6 6" stroke="white" stroke-width="2" />
-                </svg>
+                <v-icon size="64" color="error" class="mb-4">mdi-alert-circle</v-icon>
                 <h3 class="text-h6 mb-2 text-error">Sign-In Failed</h3>
                 <p class="text-body-2 text-medium-emphasis mb-4">
                   {{ errorMessage }}
@@ -169,42 +163,6 @@ onMounted(() => {
 <style scoped lang="scss">
 .google-callback-container {
   min-height: 100vh;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-}
-
-.success-icon {
-  animation: successPulse 0.6s ease-in-out;
-}
-
-.error-icon {
-  animation: errorShake 0.6s ease-in-out;
-}
-
-@keyframes successPulse {
-  0% {
-    transform: scale(0.8);
-    opacity: 0;
-  }
-  50% {
-    transform: scale(1.1);
-    opacity: 1;
-  }
-  100% {
-    transform: scale(1);
-    opacity: 1;
-  }
-}
-
-@keyframes errorShake {
-  0%,
-  100% {
-    transform: translateX(0);
-  }
-  25% {
-    transform: translateX(-5px);
-  }
-  75% {
-    transform: translateX(5px);
-  }
+  background: linear-gradient(135deg, rgb(var(--v-theme-primary)) 0%, rgb(var(--v-theme-secondary)) 100%);
 }
 </style>

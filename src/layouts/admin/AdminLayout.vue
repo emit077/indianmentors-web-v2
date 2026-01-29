@@ -10,16 +10,13 @@ const customizer = useCustomizerStore();
 
 <template>
   <v-locale-provider>
-    <v-app
-      :theme="customizer.actTheme"
-      :class="[
-        customizer.actTheme,
-        customizer.fontTheme,
-        customizer.mini_sidebar ? 'mini-sidebar' : '',
-        customizer.setHorizontalLayout ? 'horizontalLayout' : 'verticalLayout',
-        customizer.inputBg ? 'inputWithbg' : ''
-      ]"
-    >
+    <v-app :theme="customizer.actTheme" :class="[
+      customizer.actTheme,
+      customizer.fontTheme,
+      customizer.mini_sidebar ? 'mini-sidebar' : '',
+      customizer.setHorizontalLayout ? 'horizontalLayout' : 'verticalLayout',
+      customizer.inputBg ? 'inputWithbg' : ''
+    ]">
       <NavigationDrawer />
       <AppBar />
 
@@ -34,7 +31,7 @@ const customizer = useCustomizerStore();
         </v-container>
         <v-container fluid class="pt-0">
           <div>
-            <FooterPanel />
+            <!-- <FooterPanel /> -->
           </div>
         </v-container>
       </v-main>

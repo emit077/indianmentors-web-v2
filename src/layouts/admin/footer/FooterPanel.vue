@@ -20,12 +20,12 @@ const footerLink = shallowRef([
   <v-footer class="px-0 footer">
     <v-row justify="center" no-gutters>
       <v-col cols="6">
-        <p class="text-caption mb-0">© Able Pro ♥ crafted by Team Phoenixcoded</p>
+        <!-- <p class="text-caption mb-0">© ♥ crafted by Team Phoenixcoded</p> -->
       </v-col>
       <v-col class="text-right" cols="6">
-        <a v-for="(item, i) in footerLink" :key="i" class="mx-2 text-caption text-darkText" target="_blank" :href="item.link">
+        <!-- <a v-for="(item, i) in footerLink" :key="i" class="mx-2 text-caption text-darkText" target="_blank" :href="item.link">
           {{ item.title }}
-        </a>
+        </a> -->
       </v-col>
     </v-row>
   </v-footer>

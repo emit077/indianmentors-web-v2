@@ -9,11 +9,11 @@ import Banner from '@/assets/images/analytics/welcome-banner.png';
       <v-row>
         <v-col cols="12" xl="6" md="7" sm="10">
           <div class="pb-md-8 pt-md-7 pt-5 pb-6">
-            <h2 class="text-sm-h2 text-h3">Explore Redesigned Able Pro</h2>
+            <h2 class="text-sm-h2 text-h3">Welcome to Indian Mentors</h2>
             <p class="text-h6 mb-7">
-              The Brand new User Interface with power of Material-UI Components. Explore the Endless possibilities with Able Pro.
+              The Brand new User Interface with power of Material-UI Components. Explore the Endless possibilities with Indian Mentors.
             </p>
-            <v-btn color="white" variant="outlined" rounded="md">Exclusive on Themeforest</v-btn>
+            <!-- <v-btn color="white" variant="outlined" rounded="md">Exclusive on Themeforest</v-btn> -->
           </div>
         </v-col>
         <v-col cols="12" xl="6" md="5" class="d-md-block d-none">

@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { shallowRef } from 'vue';
 import { useCustomizerStore } from '../../../stores/customizer';
-import sidebarItems from '../../../configs/drawer/admin_drawer';
+import leftDrawerItems from '@/layouts/config/drawer';
 
 import NavGroup from './NavGroup/NavGroup.vue';
 import NavItem from './NavItem/NavItem.vue';
@@ -10,7 +10,7 @@ import ExtraBox from './extrabox/ExtraBox.vue';
 import Logo from '../logo/LogoMain.vue';
 
 const customizer = useCustomizerStore();
-const sidebarMenu = shallowRef(sidebarItems);
+const drawerItems = shallowRef(leftDrawerItems?.drawerItems || []);
 </script>
 
 <template>
@@ -37,7 +37,7 @@ const sidebarMenu = shallowRef(sidebarItems);
     <perfect-scrollbar class="scrollnavbar">
       <v-list aria-busy="true" class="px-2" aria-label="menu list">
         <!---Menu Loop -->
-        <template v-for="(item, i) in sidebarMenu" :key="i">
+        <template v-for="(item, i) in drawerItems" :key="i">
           <!---Item Sub Header -->
           <NavGroup :item="item" v-if="item.header" :key="item.title" />
           <!---Item Divider -->
@@ -50,7 +50,7 @@ const sidebarMenu = shallowRef(sidebarItems);
         </template>
       </v-list>
       <div class="pa-4">
-        <ExtraBox />
+        <!-- <ExtraBox /> -->
       </div>
       <div class="justify-center text-center">
         <v-chip size="small" color="primary" variant="tonal"> v1.0.0 (Beta) </v-chip>

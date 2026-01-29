@@ -61,7 +61,7 @@ const handleClick = (event) => {
 .table-btn:hover {
   background-color: rgb(var(--btn-color), 1);
   .feather {
-    color: #fff;
+    color: rgb(var(--v-theme-white));
   }
 }
 </style>

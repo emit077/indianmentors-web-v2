@@ -7,13 +7,13 @@ const MainRoutes = {
   component: () => import('@/layouts/admin/AdminLayout.vue'),
   children: [
     {
-      name: 'Landingpage',
+      name: '',
       path: '/',
       component: () => import('@/views/dashboards/default/DefaultDashboard.vue')
     },
     {
       name: 'Default',
-      path: '/dashboard/default',
+      path: '/dashboard',
       component: () => import('@/views/dashboards/default/DefaultDashboard.vue')
     },
     {
@@ -50,6 +50,31 @@ const MainRoutes = {
       name: 'StudentProfile',
       path: '/students/profile/:id',
       component: () => import('@/views/student/StudentProfile.vue')
+    },
+    {
+      name: 'SessionList',
+      path: '/sessions/list',
+      component: () => import('@/views/session/SessionList.vue')
+    },
+    {
+      name: 'BrowseTutors',
+      path: '/browse/tutors',
+      component: () => import('@/views/browse/Browse.vue')
+    },
+    {
+      name: 'BrowseProfile',
+      path: '/browse/profile/:id',
+      component: () => import('@/views/browse/Profile.vue')
+    },
+    {
+      name: 'StudentBrowseSubscription',
+      path: '/subscription/browse',
+      component: () => import('@/views/subscription/StudentBrowseSubscription.vue')
+    },
+    {
+      name: 'Chat',
+      path: '/chat',
+      component: () => import('@/views/chat/ChatView.vue')
     }
   ]
 };
