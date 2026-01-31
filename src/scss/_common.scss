@@ -1,10 +1,42 @@
-.word-break{word-break: break-all;}
+.font-roboto {
+    font-family: 'Roboto', sans-serif !important;
+}
 
-.rotate-180{transform: rotate(180deg);}
+.font-poppins {
+    font-family: 'Poppins', sans-serif !important;
+}
 
-.text-truncate{
+.font-inter {
+    font-family: 'Inter', sans-serif !important;
+}
+
+.font-inter-var {
+    font-family: Inter var !important;
+}
+
+.font-public {
+    font-family: 'Public sans', sans-serif !important;
+}
+
+.word-break {
+    word-break: break-all;
+}
+
+.rotate-180 {
+    transform: rotate(180deg);
+}
+
+.text-truncate {
     display: block;
     overflow: hidden;
     text-overflow: ellipsis !important;
     white-space: nowrap;
+}
+
+.text-truncate-3 {
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }

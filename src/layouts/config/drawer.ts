@@ -171,7 +171,28 @@ const leftDrawerConfig: Record<string, any> = {
         title: 'Support',
         icon: 'custom-support',
         to: '/dashboard/support'
-      }
+      },
+      { header: 'Utilities' },
+      {
+        title: 'Typography',
+        icon: 'custom-typography',
+        to: '/utils/typography'
+      },
+      {
+        title: 'Colors',
+        icon: 'custom-colorpick',
+        to: '/utils/colors'
+      },
+      {
+        title: 'Shadows',
+        icon: 'custom-shadow',
+        to: '/utils/shadows'
+      },
+      {
+        title: 'Icons',
+        icon: 'custom-shapes',
+        to: '/utils/icons'
+      },
     ]
   }
 };

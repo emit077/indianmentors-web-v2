@@ -1,43 +1,35 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue';
-import { useRouter } from 'vue-router';
 import { createDebouncedSearch, api } from '@/utils/api/axios';
 import CommonHelpers from '@/utils/helpers/helper-functions';
-import { encrypt } from '@/utils/helpers/crypto';
-import { mdiPlus, mdiPhone, mdiArrowRight, mdiTrayArrowDown, mdiTuneVariant } from '@mdi/js';
+import { mdiTuneVariant, mdiTrayArrowDown, mdiClockTimeTwo, mdiCheckDecagram, mdiTranslate, mdiAccountSchool, mdiMapMarker, mdiHeart, mdiHeartOutline, mdiShareVariant } from '@mdi/js';
 
-import ProfileCard from '@/components/shared/ProfileCard.vue';
+const mobileScreen = CommonHelpers.isMobile();
+
 import ComponentTitle from '@/components/shared/ComponentTitle.vue';
 import SvgSprite from '@/components/shared/SvgSprite.vue';
 import pageConfig from './config/tutor_list';
-// Router setup
-const router = useRouter();
+import female from '@/assets/images/gender/female.png';
 
-// Student data
 const studentList = ref<any[]>([]);
 const page = ref(1);
 const totalPages = ref(1);
 const totalItems = ref(0);
 const itemsPerPage = ref(20);
-
-// Search setup
 const searchQuery = ref('');
 const searchLoading = ref(false);
-// Create search function
+
 const searchFunction = async (query: string, signal?: AbortSignal) => {
   searchLoading.value = true;
-
   try {
     const response = await api.get<any>(pageConfig.API_URL, {
       params: { q: query, page: page.value },
-      signal // Pass signal to cancel previous requests
+      signal
     });
-
     studentList.value = response.students;
     totalPages.value = response.total_pages;
     totalItems.value = response.total;
   } catch (err: any) {
-    // Ignore cancellation errors
     if (err.name !== 'CanceledError' && err.name !== 'AbortError') {
       console.error('Search error:', err);
     }
@@ -45,16 +37,14 @@ const searchFunction = async (query: string, signal?: AbortSignal) => {
     searchLoading.value = false;
   }
 };
-// Create debounced search (300ms delay)
+
 const debouncedSearch = createDebouncedSearch(searchFunction, 300);
 
-// Handle search input - call debounced function directly (better than watch)
 const handleSearch = async () => {
   const query = searchQuery.value?.trim() || '';
   if (query.length > 0) {
     await debouncedSearch(query);
   } else {
-    // If search is cleared, fetch all students
     await searchFunction('');
   }
 };
@@ -93,26 +83,122 @@ onMounted(async () => {
     <!-- Card Section -->
     <v-row no-gutters>
       <v-col cols="12" md="4" class="pa-1" v-for="data in studentList" :key="data.user_table_id">
-        <ProfileCard :config="pageConfig.profileCardConfig" :data="data">
-          <template #classAndBoard="{ item, con }">
-            <div class="">
-              <div class="text-caption text-medium-emphasis mb-1">Class & board</div>
-              <div class="text-subtitle-2 text-truncate">{{ item.class_name }} - {{ item.board_name?.toUpperCase() }}
+        <v-card rounded="md" class="mb-4 v-card--variant-outlined" variant="flat" color="white">
+          <!-- Profile Header -->
+          <v-sheet color="primary" class="pa-4 text-center rounded-md position-relative overflow-hidden"
+            style="border-bottom-left-radius: 0 !important; border-bottom-right-radius: 0 !important">
+            <!-- Background Decorative Elements - Choose one style below -->
+            <!-- Style Option 1: Waves Pattern -->
+            <div class="bg-decoration">
+              <svg class="wave-pattern" viewBox="0 0 1200 120" preserveAspectRatio="none">
+                <path
+                  d="M321.39,56.44c58-10.79,114.16-30.13,172-41.86,82.39-16.72,168.19-17.73,250.45-.39C823.78,31,906.67,72,985.66,92.83c70.05,18.48,146.53,26.09,214.34,3V0H0V27.35A600.21,600.21,0,0,0,321.39,56.44Z"
+                  fill="rgba(255,255,255,0.1)"></path>
+              </svg>
+            </div>
+            <div class="position-relative mb-3" style="z-index: 1">
+              <div>
+                <v-progress-circular model-value="100" :rotate="-90" :size="mobileScreen ? 100 : 100" :width="3"
+                  color=" white">
+                  <v-avatar :size="mobileScreen ? 86 : 98" class="border-lg bg-white">
+                    <v-img :src="female" :alt="'female'" cover />
+                  </v-avatar>
+                </v-progress-circular>
+              </div>
+
+              <!-- <v-chip color="success" size="x-small" variant="flat" class="completion-badge">
+                100%
+              </v-chip> -->
+            </div>
+
+            <div style="position: relative; z-index: 1" class="text-center">
+              <div class="d-flex align-center justify-center">
+                <h3 class="text-h5 font-weight-bold text-white text-truncate">
+                  {{ data.name || '' }}
+                </h3>
+                <v-icon class="ml-1 text-success" :icon="mdiCheckDecagram" size="20" />
+              </div>
+              <!-- <v-chip size="small" variant="tonal" color="white" class="my-3">
+                <v-icon size="18" class="mr-1" :icon="mdiAccountSchool"></v-icon><b>Maths, Science Biology</b>
+              </v-chip> -->
+              <v-chip size="small" variant="tonal" rounded="md" color="white" class="my-3">
+                <v-icon size="18" class="mr-1" :icon="mdiMapMarker"></v-icon><b>Raipur, Chhattisgarh, India</b>
+              </v-chip>
+              <div class="text-body-2 text-truncate">
+                <!-- Raipur, Chhattisgarh, India -->
+                Maths| Science | Biology
               </div>
             </div>
-          </template>
 
-          <template #actionBtn="{ item, con }">
-            <div class="mb-3 d-flex justify-space-between">
-              <v-btn color="primary" variant="outlined" width="48%" @click="CommonHelpers.launchDialpad(item.mobile)">
-                Call</v-btn>
-              <v-btn color="primary" variant="outlined" width="48%"
-                :to="{ name: 'StudentProfile', params: { id: encrypt(item.id) } }">
-                visit Profile
-              </v-btn>
+          </v-sheet>
+
+          <!-- reviews rating section -->
+          <v-row no-gutters class="bg-secondary100">
+            <v-col cols="4" md="4" class="pa-3 justify-center text-center">
+              <div class="d-flex align-center justify-center">
+                <span class="mr-2 font-weight-bold  text-subtitle-1"> 4.5 </span>
+                <SvgSprite name="custom-star" style="width: 18px; height: 18px" class="" />
+              </div>
+              <div class="text-caption text-medium-emphasis ">
+                14k Reviews
+              </div>
+            </v-col>
+            <v-col cols="4" md="4" class="pa-3 justify-center text-center">
+              <div class="d-flex align-center justify-center">
+                <span class="mr-2 font-weight-bold  text-subtitle-1"> 100 </span>
+                <v-icon size="18" class="mr-1" :icon="mdiClockTimeTwo"></v-icon>
+              </div>
+              <div class="text-caption text-medium-emphasis ">
+                Hrs Classes
+              </div>
+            </v-col>
+            <v-col cols="4" md="4" class="pa-3 justify-center text-center">
+              <div class="d-flex align-center justify-center">
+                <span class="mr-2 font-weight-bold  text-subtitle-1"> 45 </span>
+                <SvgSprite name="custom-user-1  " style="width: 18px; height: 18px" class="" />
+              </div>
+              <div class="text-caption text-medium-emphasis ">
+                Students
+              </div>
+            </v-col>
+          </v-row>
+          <!--  -->
+
+          <v-card-text class="py-2">
+            <div class="d-flex align-center ">
+              <v-icon size="small" color="" class="mr-1" :icon="mdiTranslate"></v-icon>
+              <div class="text-body-2 text-truncate">
+                Hindi(Native), English(Fluent), Tamil(Fluent)
+              </div>
             </div>
-          </template>
-        </ProfileCard>
+            <div class="text-body-2 text-medium-emphasis font-weight-medium text-truncate-3 my-3">Math Tutor |9 years of
+              experience |
+              Engineer | GCSE(edxcel,AQA) | IGCSE | Calculus | Algebra | AP Calculus | Trigonometry | Keystage|
+              O/A-levels
+              Engineer | GCSE(edxcel,AQA) | IGCSE | Calculus | Algebra | AP Calculus | Trigonometry | Keystage|
+              O/A-levels
+            </div>
+            <v-row no-gutters class="mb-3 align-center">
+              <v-col cols="7" md="6" class="align-center">
+                <h6 class="text-h3">₹<span class="font-poppins">1000</span>
+                  <span class="text-caption text-medium-emphasis"> /hour</span>
+                </h6>
+              </v-col>
+              <v-col cols="5" md="6" class=" text-right">
+                <v-btn class="mr-2" color="primary" variant="tonal" size="x-small" icon>
+                  <!-- <v-icon :icon="mdiHeart"></v-icon> -->
+                  <v-icon :icon="mdiHeartOutline"></v-icon>
+
+                </v-btn>
+                <v-btn color="primary" variant="tonal" size="x-small" :icon="mdiShareVariant"></v-btn>
+              </v-col>
+            </v-row>
+          </v-card-text>
+
+          <v-card-actions class="">
+            <v-btn color="primary" variant="outlined" block>Know More</v-btn>
+          </v-card-actions>
+        </v-card>
       </v-col>
     </v-row>
   </div>
@@ -132,3 +218,25 @@ onMounted(async () => {
         @update:model-value="searchFunction(searchQuery)"></v-pagination></v-col>
   </v-row>
 </template>
+
+<style scoped lang="scss">
+.bg-decoration {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  z-index: 0;
+  pointer-events: none;
+}
+
+.wave-pattern {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0.6;
+}
+</style>

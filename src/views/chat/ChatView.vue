@@ -1,13 +1,5 @@
 <template>
   <v-container fluid class="chat-container pa-0">
-    <!-- WebSocket Status Banner -->
-    <!-- <div class="alert-banner text-info border-info" v-if="!chatStore.websocketAvailable && chatStore.websocketEnabled">
-      <v-icon size="small" class="mr-2">mdi-information</v-icon>
-      <span class="text-caption">
-        Live chat unavailable. Using REST API mode - click refresh to see new messages.
-      </span>
-    </div> -->
-
     <v-banner v-if="!chatStore.websocketAvailable && chatStore.websocketEnabled" class="bg-info font-weight-medium"
       lines="one" style="flex: unset !important;" :icon="mdiInformation" color="info"
       text="Live chat unavailable. Using REST API mode - click refresh to see new messages." :stacked="false">
@@ -71,7 +63,7 @@
 
                 <v-list-item-title class="text-body-1 font-weight-medium opacity-70">{{
                   getConversationName(conversation)
-                  }}
+                }}
                   <div class="text-caption">{{ formatTime(conversation.last_message?.created_at) }}</div>
 
 
@@ -108,9 +100,9 @@
       <v-col cols="12" md="8" lg="9" class="chat-area">
         <div v-if="selectedConversation" class="chat-container-inner">
           <!-- Fixed Chat Header -->
-          <div class="chat-header">
+          <div class="chat-header elevation-2">
             <v-card-title class="px-4 py-3 border-b">
-              <div class="d-flex align-center justify-space-between w-100">
+              <div class="d-flex align-center">
                 <div class="d-flex align-center">
                   <v-avatar :color="selectedConversation.conversation_type === 'group' ? 'primary' : 'secondary'"
                     class="mr-3">
@@ -118,11 +110,11 @@
                     <span v-else>{{ getConversationInitials(selectedConversation) }}</span>
                   </v-avatar>
                   <div>
-                    <h4 class="text-h6">{{ getConversationName(selectedConversation) }}</h4>
-                    <small class="text-caption text-grey">
+                    <h4 class="text-h6 font-weight-medium ">{{ getConversationName(selectedConversation) }}</h4>
+                    <small class="text-caption text-grey ">
                       {{ selectedConversation.conversation_type === 'group'
                         ? `${selectedConversation.participants?.length || 0} members`
-                        : 'Online'
+                        : ''
                       }}
                     </small>
                   </div>
