@@ -21,10 +21,13 @@ const props = defineProps<{
         <div class="d-flex align-top" v-if="con.formatType == $keys.DT_PROFILE">
           <div class="text-center">
             <div>
-              <v-progress-circular :model-value="data.user.profile_completion_per" :rotate="180" :size="50" :width="5" color="primary">
+              <v-progress-circular :model-value="data.user.profile_completion_per" :rotate="180" :size="50" :width="5"
+                color="primary">
                 <v-avatar :size="avatarSize" color="primary" variant="tonal" class="">
-                  <v-img v-if="data.user.gender === 'Male'" :src="male" :alt="data.user.gender" :size="avatarSize" class="mt-1" />
-                  <v-img v-else-if="data.user.gender === 'Female'" :src="female" :alt="data.user.gender" :size="avatarSize" class="mt-1" />
+                  <v-img v-if="data.user.gender === 'Male'" :src="male" :alt="data.user.gender" :size="avatarSize"
+                    class="mt-1" />
+                  <v-img v-else-if="data.user.gender === 'Female'" :src="female" :alt="data.user.gender"
+                    :size="avatarSize" class="mt-1" />
                   <span v-else class="text-body-1 font-weight-bold"> -- </span>
                 </v-avatar>
               </v-progress-circular>

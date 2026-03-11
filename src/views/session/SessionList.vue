@@ -27,6 +27,7 @@ const itemsPerPage = ref(20);
 // Search setup
 const searchQuery = ref('');
 const searchLoading = ref(false);
+const activeTab = ref<string>('table');
 // Create search function
 const searchFunction = async (query: string, signal?: AbortSignal) => {
   searchLoading.value = true;
@@ -102,7 +103,7 @@ onMounted(async () => {
   <!-- Search and Filter Section Ends -->
   <!-- Button Group Section -->
   <div class="text-left">
-    <DtListTabbedUI>
+    <DtListTabbedUI v-model="activeTab">
       <!-- Table Section -->
       <template #table>
         <DataTable :headers="pageConfig.dataTableConfig.headers" :items="studentList" :total-items="totalItems"
@@ -148,7 +149,7 @@ onMounted(async () => {
                 <div class="">
                   <div class="text-caption text-medium-emphasis mb-1">Class & board</div>
                   <div class="text-subtitle-2 text-truncate">{{ item.class_name }} - {{ item.board_name?.toUpperCase()
-                  }}</div>
+                    }}</div>
                 </div>
               </template>
 
@@ -169,8 +170,8 @@ onMounted(async () => {
       <!-- Button Group Section Ends -->
     </DtListTabbedUI>
   </div>
-  <!-- Pagination Section -->
-  <v-row class="my-4 px-1">
+  <!-- Pagination Section (hidden for graph tab) -->
+  <v-row class="my-4 px-1" v-if="activeTab !== 'graph'">
     <v-col cols="12" md="6" class="text-caption text-secondary">
       Showing
       <span class="font-weight-bold px-1">

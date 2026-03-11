@@ -57,19 +57,34 @@ const MainRoutes = {
       component: () => import('@/views/session/SessionList.vue')
     },
     {
+      name: 'MentorList',
+      path: '/dashboard/mentors',
+      component: () => import('@/views/mentor/MentorList.vue')
+    },
+    {
       name: 'BrowseTutors',
       path: '/browse/tutors',
       component: () => import('@/views/browse/Browse.vue')
     },
     {
-      name: 'BrowseProfile',
-      path: '/browse/profile/:id',
+      name: 'BrowseTutorsProfile',
+      path: '/browse/tutors/profile/:id',
       component: () => import('@/views/browse/Profile.vue')
     },
     {
       name: 'StudentBrowseSubscription',
       path: '/subscription/browse',
       component: () => import('@/views/subscription/StudentBrowseSubscription.vue')
+    },
+    {
+      name: 'PaymentTransactions',
+      path: '/dashboard/payments/transactions',
+      component: () => import('@/views/payment/PaymentList.vue')
+    },
+    {
+      name: 'PaymentScheduled',
+      path: '/dashboard/payments/scheduled',
+      component: () => import('@/views/payment/ScheduledPaymentList.vue')
     },
     {
       name: 'Chat',

@@ -14,18 +14,8 @@ const drawerItems = shallowRef(leftDrawerItems?.drawerItems || []);
 </script>
 
 <template>
-  <v-navigation-drawer
-    left
-    v-model="customizer.Sidebar_drawer"
-    elevation="0"
-    rail-width="90"
-    mobile-breakpoint="lg"
-    width="250"
-    app
-    class="leftSidebar"
-    :rail="customizer.mini_sidebar"
-    expand-on-hover
-  >
+  <v-navigation-drawer left v-model="customizer.Sidebar_drawer" elevation="0" rail-width="90" mobile-breakpoint="lg"
+    width="260" app class="leftSidebar" :rail="customizer.mini_sidebar" expand-on-hover>
     <!---Logo part -->
 
     <div class="pa-5">

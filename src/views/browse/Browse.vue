@@ -2,7 +2,8 @@
 import { ref, onMounted } from 'vue';
 import { createDebouncedSearch, api } from '@/utils/api/axios';
 import CommonHelpers from '@/utils/helpers/helper-functions';
-import { mdiTuneVariant, mdiTrayArrowDown, mdiClockTimeTwo, mdiCheckDecagram, mdiTranslate, mdiAccountSchool, mdiMapMarker, mdiHeart, mdiHeartOutline, mdiShareVariant } from '@mdi/js';
+import { encrypt } from '@/utils/helpers/crypto';
+import { mdiTuneVariant, mdiTrayArrowDown, mdiClockTimeTwo, mdiSealVariant, mdiTrendingUp, mdiPodiumSilver, mdiCheckDecagram, mdiTranslate, mdiAccountSchool, mdiMapMarker, mdiHeart, mdiHeartOutline, mdiShareVariant } from '@mdi/js';
 
 const mobileScreen = CommonHelpers.isMobile();
 
@@ -83,7 +84,12 @@ onMounted(async () => {
     <!-- Card Section -->
     <v-row no-gutters>
       <v-col cols="12" md="4" class="pa-1" v-for="data in studentList" :key="data.user_table_id">
-        <v-card rounded="md" class="mb-4 v-card--variant-outlined" variant="flat" color="white">
+        <v-card rounded="md" class="mb-4 v-card--variant-outlined position-relative" variant="flat" color="white">
+          <!-- Bookmark button in top right corner -->
+          <v-btn class="bookmark-btn" color="white" variant="flat" size="x-small" icon>
+            <v-icon color="primary" :icon="mdiHeartOutline"></v-icon>
+            <!-- <v-icon color="primary" :icon="mdiHeart"></v-icon> -->
+          </v-btn>
           <!-- Profile Header -->
           <v-sheet color="primary" class="pa-4 text-center rounded-md position-relative overflow-hidden"
             style="border-bottom-left-radius: 0 !important; border-bottom-right-radius: 0 !important">
@@ -178,25 +184,32 @@ onMounted(async () => {
               Engineer | GCSE(edxcel,AQA) | IGCSE | Calculus | Algebra | AP Calculus | Trigonometry | Keystage|
               O/A-levels
             </div>
-            <v-row no-gutters class="mb-3 align-center">
-              <v-col cols="7" md="6" class="align-center">
+
+            <v-row no-gutters class="mb-3">
+              <v-col cols="6" md="6" class="">
                 <h6 class="text-h3">₹<span class="font-poppins">1000</span>
                   <span class="text-caption text-medium-emphasis"> /hour</span>
                 </h6>
               </v-col>
-              <v-col cols="5" md="6" class=" text-right">
-                <v-btn class="mr-2" color="primary" variant="tonal" size="x-small" icon>
-                  <!-- <v-icon :icon="mdiHeart"></v-icon> -->
-                  <v-icon :icon="mdiHeartOutline"></v-icon>
-
-                </v-btn>
-                <v-btn color="primary" variant="tonal" size="x-small" :icon="mdiShareVariant"></v-btn>
+              <v-col cols="6" md="6" class="text-right">
+                <!-- <v-chip color="success" variant="flat" size="small">
+                  <v-icon class="mr-1" :icon="mdiSealVariant"></v-icon>
+                  Certified Tutorr
+                </v-chip> -->
+                <v-chip class="font-weight-bold" color="success" variant="text" size="small">
+                  <v-icon class="mr-1" :icon="mdiTrendingUp"></v-icon>
+                  Popular Tutor
+                </v-chip>
               </v-col>
             </v-row>
           </v-card-text>
 
           <v-card-actions class="">
-            <v-btn color="primary" variant="outlined" block>Know More</v-btn>
+            <RouterLink class="w-100" :to="{ name: 'BrowseTutorsProfile', params: { id: encrypt(data.id) } }"
+              style="text-decoration: none; display: inline-block">
+              <v-btn color="primary" variant="outlined" block>Know More</v-btn>
+            </RouterLink>
+
           </v-card-actions>
         </v-card>
       </v-col>
@@ -229,6 +242,13 @@ onMounted(async () => {
   overflow: hidden;
   z-index: 0;
   pointer-events: none;
+}
+
+.bookmark-btn {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  z-index: 10;
 }
 
 .wave-pattern {

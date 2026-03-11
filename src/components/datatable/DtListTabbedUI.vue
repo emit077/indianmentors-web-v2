@@ -1,10 +1,11 @@
 <script setup lang="ts">
-import { ref } from 'vue';
 import CommonHelpers from '@/utils/helpers/helper-functions';
-import { mdiTableLarge, mdiListBoxOutline, mdiAccountBoxOutline } from '@mdi/js';
+import { mdiTableLarge, mdiListBoxOutline, mdiAccountBoxOutline, mdiChartBellCurve } from '@mdi/js';
 
 const isMobileScreen = CommonHelpers.isMobile();
-const currentTab = ref<string>(isMobileScreen.value ? 'card' : 'table');
+
+// Expose current tab to parent via v-model
+const currentTab = defineModel<string>({ default: 'table' });
 
 const btnConfig = [
   {
@@ -18,16 +19,20 @@ const btnConfig = [
   {
     icon: mdiAccountBoxOutline,
     value: 'card'
+  },
+  {
+    icon: mdiChartBellCurve,
+    value: 'graph'
   }
 ];
 </script>
 <template>
   <v-btn-toggle v-if="!isMobileScreen" v-model="currentTab" color="primary" variant="outlined" mandatory>
-    <v-btn v-for="btn in btnConfig" :value="btn.value" :icon="btn.icon"></v-btn>
+    <v-btn v-for="btn in btnConfig" :key="btn.value" :value="btn.value" :icon="btn.icon"></v-btn>
   </v-btn-toggle>
 
   <v-tabs-window v-model="currentTab">
-    <v-tabs-window-item v-for="btn in btnConfig" :value="btn.value" :key="btn.value">
+    <v-tabs-window-item v-for="btn in btnConfig" :key="btn.value" :value="btn.value">
       <slot :name="`${btn.value}`"></slot>
     </v-tabs-window-item>
   </v-tabs-window>

@@ -41,6 +41,11 @@ const leftDrawerConfig: Record<string, any> = {
         to: '/dashboard/mentors'
       },
       {
+        title: 'Browse Tutors',
+        icon: 'custom-search-normal',
+        to: '/browse/tutors'
+      },
+      {
         title: 'Teams',
         icon: 'custom-user-add',
         to: '/dashboard/teams'
@@ -48,7 +53,19 @@ const leftDrawerConfig: Record<string, any> = {
       {
         title: 'Payments',
         icon: 'custom-inr-square',
-        to: '/dashboard/payments'
+        to: '/dashboard/payments/transactions',
+        children: [
+          {
+            title: 'Transactions',
+            icon: 'custom-inr-square',
+            to: '/dashboard/payments/transactions'
+          },
+          {
+            title: 'Scheduled Payments',
+            icon: 'custom-calendar-check',
+            to: '/dashboard/payments/scheduled'
+          }
+        ]
       },
       {
         title: 'Payouts',
@@ -125,6 +142,11 @@ const leftDrawerConfig: Record<string, any> = {
         to: '/students/profile/' + encrypt(user.user_id.toString())
       },
       {
+        title: 'Students',
+        icon: 'custom-user-1',
+        to: '/students'
+      },
+      {
         title: 'Subscriptions',
         icon: 'custom-flag',
         to: '/dashboard/',
@@ -153,9 +175,21 @@ const leftDrawerConfig: Record<string, any> = {
         to: '/sessions/list'
       },
       {
-        title: 'Transactions',
+        title: 'Payments',
         icon: 'custom-inr-square',
-        to: '/dashboard/payments'
+        to: '/dashboard/payments/transactions',
+        children: [
+          {
+            title: 'Transactions',
+            icon: 'custom-inr-square',
+            to: '/dashboard/payments/transactions'
+          },
+          {
+            title: 'Scheduled Payments',
+            icon: 'custom-calendar-check',
+            to: '/dashboard/payments/scheduled'
+          }
+        ]
       },
       {
         title: 'Messages',

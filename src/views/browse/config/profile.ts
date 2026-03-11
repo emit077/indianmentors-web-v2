@@ -504,7 +504,7 @@ const studentProfileConfig: Record<string, any> = {
   /* Student Profile Config */
   [$keys.ACCOUNT_STUDENT]: {
     pageHeaderConfig: {
-      pageTitle: 'My Profile',
+      pageTitle: 'Tutor Profile',
       pageDescription: 'Manage and view all student profiles',
       showBackButton: true,
       breadcrumbs: [
@@ -514,7 +514,7 @@ const studentProfileConfig: Record<string, any> = {
           to: { name: 'Default' }
         },
         {
-          title: 'My Profile',
+          title: 'Tutor Profile',
           disabled: true
           // to: { name: 'StudentList' }
         }

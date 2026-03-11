@@ -198,7 +198,7 @@ const scrollToSection = (sectionKey: string) => {
               </template>
               <v-list-item-title class="text-caption text-medium-emphasis">Phone Number</v-list-item-title>
               <v-list-item-subtitle class="text-body-2 font-weight-medium">+91 {{ studentData.mobile
-                }}</v-list-item-subtitle>
+              }}</v-list-item-subtitle>
             </v-list-item>
 
             <v-list-item v-if="studentData.email" class="px-0 mb-2">
@@ -209,7 +209,7 @@ const scrollToSection = (sectionKey: string) => {
               </template>
               <v-list-item-title class="text-caption text-medium-emphasis">Email Address</v-list-item-title>
               <v-list-item-subtitle class="text-body-2 font-weight-medium text-truncate">{{ studentData.email
-                }}</v-list-item-subtitle>
+              }}</v-list-item-subtitle>
             </v-list-item>
 
             <v-list-item v-if="studentData.class_name" class="px-0 mb-2">
@@ -221,7 +221,7 @@ const scrollToSection = (sectionKey: string) => {
               <v-list-item-title class="text-caption text-medium-emphasis">Class & Board</v-list-item-title>
               <v-list-item-subtitle class="text-body-2 font-weight-medium">{{ studentData.class_name }} - {{
                 studentData.board_name
-                }}</v-list-item-subtitle>
+              }}</v-list-item-subtitle>
             </v-list-item>
 
             <v-list-item v-if="studentData.city" class="px-0">
@@ -232,7 +232,7 @@ const scrollToSection = (sectionKey: string) => {
               </template>
               <v-list-item-title class="text-caption text-medium-emphasis">Location</v-list-item-title>
               <v-list-item-subtitle class="text-body-2 font-weight-medium">{{ studentData.city }}, {{ studentData.state
-                }}</v-list-item-subtitle>
+              }}</v-list-item-subtitle>
             </v-list-item>
           </v-list>
         </v-card-text>
