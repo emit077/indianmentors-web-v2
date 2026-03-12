@@ -62,6 +62,11 @@ const MainRoutes = {
       component: () => import('@/views/mentor/MentorList.vue')
     },
     {
+      name: 'MentorProfile',
+      path: '/mentor/profile/:id',
+      component: () => import('@/views/mentor/MentorProfile.vue')
+    },
+    {
       name: 'BrowseTutors',
       path: '/browse/tutors',
       component: () => import('@/views/browse/Browse.vue')

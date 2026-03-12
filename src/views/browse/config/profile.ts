@@ -7,7 +7,7 @@ const studentProfileConfig: Record<string, any> = {
   /* Admin Profile Config */
   [$keys.ACCOUNT_ADMIN]: {
     pageHeaderConfig: {
-      pageTitle: 'Students Profile',
+      pageTitle: 'Tutor Profile',
       pageDescription: 'Manage and view all student profiles',
       showBackButton: true,
       breadcrumbs: [
@@ -17,12 +17,12 @@ const studentProfileConfig: Record<string, any> = {
           to: { name: 'Default' }
         },
         {
-          title: 'Students',
+          title: 'Browse Tutors',
           disabled: false,
-          to: { name: 'StudentList' }
+          to: { name: 'BrowseTutors' }
         },
         {
-          title: 'Profile',
+          title: 'Tutor Profile',
           disabled: true
           // to: { name: 'StudentList' }
         }

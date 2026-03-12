@@ -26,7 +26,11 @@ import {
     mdiAccountSchool,
     mdiMapMarkerOutline,
     mdiClockOutline,
-    mdiViewList
+    mdiViewList,
+    mdiMapMarker,
+    mdiMessageText,
+    mdiTranslate,
+    mdiSchoolOutline
 } from '@mdi/js';
 
 const mobileScreen = CommonHelpers.isMobile();
@@ -148,7 +152,7 @@ const scrollToSection = (sectionKey: string) => {
     <v-row v-else>
         <!-- Sidebar Profile Card -->
         <v-col cols="12" md="3" class="mb-4">
-            <v-card rounded="md" class="mb-4 v-card--variant-outlined" variant="flat" color="white">
+            <v-card rounded="md" class="mb-4 v-card--variant-outlined profile-sidebar" variant="flat" color="white">
                 <!-- Profile Header -->
                 <v-sheet color="primary" class="pa-6 text-center rounded-md position-relative overflow-hidden"
                     style="border-bottom-left-radius: 0 !important; border-bottom-right-radius: 0 !important">
@@ -173,177 +177,193 @@ const scrollToSection = (sectionKey: string) => {
                                 <v-icon v-else :size="mobileScreen ? 50 : 60">mdi-account</v-icon>
                             </v-avatar>
                         </v-progress-circular>
-                        <v-chip color="success" size="x-small" variant="flat" class="completion-badge">
-                            {{ Math.round(studentData.profile_completion_per || 0) }}%
-                        </v-chip>
                     </div>
 
                     <div style="position: relative; z-index: 1">
                         <h3 class="text-h5 font-weight-bold mb-2 text-white">{{ studentData.name || '' }}</h3>
-                        <v-chip size="small" variant="tonal" color="white" class="mb-2"> #{{ studentData.student_id ||
-                            'N/A' }}
-                        </v-chip>
-                        <div class="d-flex align-center justify-center mt-3">
+                        <!-- <v-chip size="small" variant="tonal" color="white" class="mb-2"> #{{ studentData.student_id || 'N/A' }}</v-chip> -->
+                        <div class="d-flex align-center justify-center mt-2 ">
                             <v-icon size="x-small" color="white" class="mr-1" :icon="mdiClockOutline"></v-icon>
                             <span class="text-caption text-white">Last Active: Just Now</span>
+                        </div>
+                        <v-divider class="my-3"></v-divider>
+                        <div class="text-body-2 text-center text-truncate">
+                            <v-icon size="18" class="mr-1" :icon="mdiMapMarker"></v-icon><b>Raipur, Chhattisgarh,
+                                India</b>
                         </div>
                     </div>
                 </v-sheet>
 
                 <!-- Contact Info -->
-                <v-card-text class="pa-4">
-                    <v-list density="compact" class="bg-transparent">
-                        <v-list-item v-if="studentData.mobile" class="px-0 mb-2">
-                            <template #prepend>
-                                <v-avatar color="primary" size="40" class="mr-3">
-                                    <v-icon size="18" :icon="mdiPhoneOutline"></v-icon>
-                                </v-avatar>
-                            </template>
-                            <v-list-item-title class="text-caption text-medium-emphasis">Phone
-                                Number</v-list-item-title>
-                            <v-list-item-subtitle class="text-body-2 font-weight-medium">+91 {{ studentData.mobile
-                                }}</v-list-item-subtitle>
-                        </v-list-item>
-
-                        <v-list-item v-if="studentData.email" class="px-0 mb-2">
-                            <template #prepend>
-                                <v-avatar color="secondary" size="40" class="mr-3">
-                                    <v-icon size="18" :icon="mdiEmailOutline"></v-icon>
-                                </v-avatar>
-                            </template>
-                            <v-list-item-title class="text-caption text-medium-emphasis">Email
-                                Address</v-list-item-title>
-                            <v-list-item-subtitle class="text-body-2 font-weight-medium text-truncate">{{
-                                studentData.email
-                                }}</v-list-item-subtitle>
-                        </v-list-item>
-
-                        <v-list-item v-if="studentData.class_name" class="px-0 mb-2">
-                            <template #prepend>
-                                <v-avatar color="success" size="40" class="mr-3">
-                                    <v-icon size="18" :icon="mdiAccountSchool"></v-icon>
-                                </v-avatar>
-                            </template>
-                            <v-list-item-title class="text-caption text-medium-emphasis">Class &
-                                Board</v-list-item-title>
-                            <v-list-item-subtitle class="text-body-2 font-weight-medium">{{ studentData.class_name }} -
-                                {{
-                                    studentData.board_name
-                                }}</v-list-item-subtitle>
-                        </v-list-item>
-
-                        <v-list-item v-if="studentData.city" class="px-0">
-                            <template #prepend>
-                                <v-avatar color="info" size="40" class="mr-3">
-                                    <v-icon size="18" :icon="mdiMapMarkerOutline"></v-icon>
-                                </v-avatar>
-                            </template>
-                            <v-list-item-title class="text-caption text-medium-emphasis">Location</v-list-item-title>
-                            <v-list-item-subtitle class="text-body-2 font-weight-medium">{{ studentData.city }}, {{
-                                studentData.state
-                                }}</v-list-item-subtitle>
-                        </v-list-item>
-                    </v-list>
-                </v-card-text>
-            </v-card>
-
-            <!-- Quick Navigation -->
-            <v-sheet class="bg-transparent profile-sidebar" sticky>
-                <v-card rounded="md" class="mb-4 v-card--variant-outlined" variant="flat" color="white">
-                    <v-card-title class="d-flex align-center">
-                        <span class="text-subtitle-1">Quick Navigation</span>
-                    </v-card-title>
-                    <v-divider></v-divider>
-                    <v-card-text class="pa-2">
-                        <v-list density="compact" class="bg-transparent">
-                            <v-list-item v-for="(section, idx) in pageConfig.studentProfileConfig"
-                                :key="section.sectionKey" rounded="md" @click="scrollToSection(section.sectionKey)"
-                                class="mb-1">
-                                <template #prepend>
-                                    <v-chip size="small" color="primary" variant="flat" class="mr-2">
-                                        {{ String(Number(idx) + 1).padStart(2, '0') }}
-                                    </v-chip>
-                                </template>
-                                <v-list-item-title class="text-body-2">{{ section.title }}</v-list-item-title>
-                                <!-- <template #append>
-                  <v-icon size="small" color="primary" :icon="mdiChevronRight"></v-icon>
-                </template> -->
-                            </v-list-item>
-                        </v-list>
-                    </v-card-text>
-                </v-card>
-            </v-sheet>
-        </v-col>
-
-        <!-- Main Content -->
-        <v-col cols="12" md="9">
-            <v-card v-for="(section, index) in pageConfig.studentProfileConfig" :key="section.sectionKey"
-                :id="section.sectionKey" class="mb-4 v-card--variant-outlined" variant="flat" color="white">
-                <v-card-item class="pa-4">
-                    <div class="d-flex align-center justify-space-between flex-wrap">
-                        <div class="d-flex align-center">
-                            <v-chip color="primary" variant="flat" size="large" class="mr-3">
-                                {{ String(Number(index) + 1).padStart(2, '0') }}
-                            </v-chip>
-                            <div>
-                                <v-card-title class="pa-0 text-h5">{{ section.title }}</v-card-title>
+                <v-card-text class="pa-0">
+                    <!-- reviews rating section -->
+                    <v-row no-gutters class="bg-secondary100">
+                        <v-col cols="6" md="6" class="py-3 px-0 justify-center text-center">
+                            <div class="d-flex align-center justify-center">
+                                <span class="mr-2 font-weight-bold  text-subtitle-1"> 4.5 </span>
+                                <SvgSprite name="custom-star" style="width: 18px; height: 18px" class="" />
                             </div>
-                        </div>
-                        <v-btn v-if="section.dialogComponent" color="primary" size="small" rounded="md"
-                            @click="openDialog(section.sectionKey)">
-                            <v-icon :icon="mdiPencil" size="small"></v-icon>
-                            <span class="d-none d-sm-inline ml-1">Edit</span>
+                            <div class="text-caption text-medium-emphasis ">
+                                14k Reviews
+                            </div>
+                        </v-col>
+                        <v-col cols="6" md="6" class="pa-3 justify-center text-center">
+                            <div class="d-flex align-center justify-center">
+                                <span class="mr-2 font-weight-bold  text-subtitle-1"> 45 </span>
+                                <SvgSprite name="custom-user-1  " style="width: 18px; height: 18px" class="" />
+                            </div>
+                            <div class="text-caption text-medium-emphasis ">
+                                Students
+                            </div>
+                        </v-col>
+                    </v-row>
+                    <!-- rate section -->
+                    <div class="text-center pt-5 pb-2">
+                        <h6 class="text-h3">₹<span class="font-poppins">1000</span></h6>
+                        <span class="text-caption text-medium-emphasis"> For 60 min Lession </span>
+                    </div>
+                    <!-- action btn -->
+                    <div class="pa-4">
+                        <v-btn class="mb-3" variant="outlined" color="primary" block>
+                            <v-icon class="mr-2" size="20" :icon="mdiMessageText"></v-icon> Message
+                        </v-btn>
+                        <v-btn color="primary" variant="flat" block>
+                            <v-icon class="mr-2" size="20" :icon="mdiPhoneOutline"></v-icon> Call
                         </v-btn>
                     </div>
-                </v-card-item>
-
-                <v-divider></v-divider>
-
+                </v-card-text>
+            </v-card>
+        </v-col>
+        <!-- Main Content -->
+        <v-col cols="12" md="9">
+            <v-card class="mb-4 v-card--variant-outlined" variant="flat" color="white">
                 <v-card-text class="pa-4 pa-md-6">
-                    <v-row>
-                        <ConfigField v-for="field in section.fields" :key="field.data" :config="field"
-                            :data="studentData">
-                        </ConfigField>
-                    </v-row>
-
-                    <div v-if="section.dialogComponent" class="d-flex justify-center mt-6 d-md-none">
-                        <v-btn color="primary" variant="flat" block size="large" rounded="md"
-                            @click="openDialog(section.sectionKey)">
-                            <v-icon start :icon="mdiPencil"></v-icon>
-                            Edit {{ section.title }}
-                        </v-btn>
+                    <!-- subject and language -->
+                    <div class="pb-3">
+                        <div class="d-flex align-center ">
+                            <v-icon class="mr-2" :icon="mdiSchoolOutline"></v-icon>
+                            <div class="text-truncate">
+                                Mathematics | English
+                            </div>
+                        </div>
+                        <div class="d-flex align-center mt-3">
+                            <v-icon class="mr-2" :icon="mdiTranslate"></v-icon>
+                            <div class="text-truncate">
+                                Hindi(Native), English(Fluent), Tamil(Fluent)
+                            </div>
+                        </div>
+                    </div>
+                    <!-- About -->
+                    <div class="py-3">
+                        <h3 class="text-h4 mb-5">About Bhamini Grover </h3>
+                        <div class="my-5">
+                            Hi! I’m Bhamini Grover. I am a dual-degree professional with an M.Tech from IIIT Allahabad
+                            and an MBA from
+                            Symbiosis. With nearly 20 years of combined experience across the technology industry and
+                            academia, I
+                            provide elite-level coaching in Advanced Calculus, Statistics, and Quantitative Logic across
+                            all major
+                            international curricula.
+                        </div>
+                    </div>
+                    <!-- Education -->
+                    <div class="py-3">
+                        <h3 class="text-h4 mb-5">Education</h3>
+                        <div class="d-flex ">
+                            <div><span class="text-caption">2025-2026</span></div>
+                            <div class="pl-4">
+                                <b>M. Tech</b>
+                                <p>Indian Institute of Information Technology</p>
+                            </div>
+                        </div>
+                        <div class="my-3 d-flex ">
+                            <div><span class="text-caption">2021-2025</span></div>
+                            <div class="pl-4">
+                                <b>B. Tech</b>
+                                <p>Indian Institute of Information Technology</p>
+                            </div>
+                        </div>
+                        <!-- <div class="my-3">
+              <b>M. Tech</b>, <span class="text-caption">2025-2026</span>
+              <p>Indian Institute of Information Technology</p>
+            </div>
+            <div class="my-3">
+              <b>B. Tech</b>, <span class="text-caption">2021-2025</span>
+              <p>Indian Institute of Information Technology</p>
+            </div> -->
+                    </div>
+                    <!-- Experience -->
+                    <div class="py-3">
+                        <h3 class="text-h4 mb-5">Experience</h3>
+                        <div class=" d-flex ">
+                            <div><span class="text-caption">2025-2026</span></div>
+                            <div class="pl-4">
+                                <b>Sr. Assistant Professor </b>
+                                <p>Indian Institute of Information Technology</p>
+                            </div>
+                        </div>
+                        <div class="my-3 d-flex ">
+                            <div><span class="text-caption">2021-2025</span></div>
+                            <div class="pl-4">
+                                <b>Assistant Professor</b>
+                                <p>Indian Institute of Information Technology</p>
+                            </div>
+                        </div>
+                        <!-- <div class="my-3">
+              <b>M. Tech</b>, <span class="text-caption">2025-2026</span>
+              <p>Indian Institute of Information Technology</p>
+            </div>
+            <div class="my-3">
+              <b>B. Tech</b>, <span class="text-caption">2021-2025</span>
+              <p>Indian Institute of Information Technology</p>
+            </div> -->
+                    </div>
+                    <!-- feedback -->
+                    <div class="py-3">
+                        <h3 class="text-h4 mb-5">What my students say</h3>
+                        <v-row class="mt-3">
+                            <v-col cols="12" md="6" v-for="i in 5" :key="i">
+                                <v-card variant="outlined" class="pa-4 bg-secondary100">
+                                    <div class="float-right">
+                                        <SvgSprite name="custom-star" style="width: 18px; height: 18px" class="" />
+                                        <SvgSprite name="custom-star" style="width: 18px; height: 18px" class="" />
+                                        <SvgSprite name="custom-star" style="width: 18px; height: 18px" class="" />
+                                        <SvgSprite name="custom-star" style="width: 18px; height: 18px" class="" />
+                                        <SvgSprite name="custom-star-outline" style="width: 18px; height: 18px"
+                                            class="" />
+                                    </div>
+                                    <div class="d-flex align-center gap-3">
+                                        <v-avatar size="50" rounded="sm" color="primary" class="">
+                                        </v-avatar>
+                                        <div class="pl-2" style="min-width: 0">
+                                            <div class="text-subtitle-1 text-truncate">
+                                                Amit Kumar Sahu
+                                            </div>
+                                            <p class="text-caption text-medium-emphasis">24/02/2026</p>
+                                        </div>
+                                    </div>
+                                    <p class="mt-5">
+                                        Let me tell you what Bhamini Grover is what it actually says on the list
+                                        incrediblely helpful and
+                                        you must
+                                        book a trial lesson now!!!!!!!!!!!!!!!!!!!!!!!!!!
+                                    </p>
+                                </v-card>
+                            </v-col>
+                        </v-row>
                     </div>
                 </v-card-text>
             </v-card>
         </v-col>
     </v-row>
 
-    <!-- Dialogs -->
-    <BasicDetailsDialog v-model="basicDetailsDialog" :data="studentData" @save="saveSectionData('basic', $event)" />
-    <AcademicDetailsDialog v-model="academicDetailsDialog" :data="studentData"
-        @save="saveSectionData('academic', $event)" />
-    <AddressDetailsDialog v-model="addressDetailsDialog" :data="studentData"
-        @save="saveSectionData('address', $event)" />
-    <TutoringPreferencesDialog v-model="tutoringPreferencesDialog" :data="studentData"
-        @save="saveSectionData('tutoring', $event)" />
-    <TutorPreferencesDialog v-model="tutorPreferencesDialog" :data="studentData"
-        @save="saveSectionData('tutorPrefs', $event)" />
-    <ParentDetailsDialog v-model="parentDetailsDialog" :data="studentData" @save="saveSectionData('parent', $event)" />
-    <ReferralDialog v-model="referralDialog" :data="studentData" @save="saveSectionData('referral', $event)" />
-    <AdditionalDetailsDialog v-model="additionalDetailsDialog" :data="studentData"
-        @save="saveSectionData('additional', $event)" />
+
 </template>
 
 <style scoped lang="scss">
 .profile-sidebar {
     position: sticky;
     top: 80px;
-}
-
-.completion-badge {
-    position: absolute;
-    bottom: 5px;
-    right: 5px;
 }
 
 // Background Decorative Elements - Base
