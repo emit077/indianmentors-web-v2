@@ -8,7 +8,7 @@ const studentProfileConfig: Record<string, any> = {
   [$keys.ACCOUNT_ADMIN]: {
     pageHeaderConfig: {
       pageTitle: 'Subscription',
-      pageDescription: 'Manage and view all student profiles',
+      pageDescription: 'Compare learning plans and choose the right fit',
       showBackButton: true,
       breadcrumbs: [
         {
@@ -28,7 +28,7 @@ const studentProfileConfig: Record<string, any> = {
   [$keys.ACCOUNT_STUDENT]: {
     pageHeaderConfig: {
       pageTitle: 'Subscription',
-      pageDescription: 'Manage and view all student profiles',
+      pageDescription: 'Compare learning plans and choose the right fit',
       showBackButton: true,
       breadcrumbs: [
         {

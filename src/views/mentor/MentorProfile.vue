@@ -12,6 +12,7 @@ import { mdiPhoneOutline, mdiEmailOutline, mdiMapMarkerOutline, mdiClockOutline 
 import { useRoute } from 'vue-router';
 import { decrypt } from '@/utils/helpers/crypto';
 import { computed } from 'vue';
+import $keys from '@/utils/keys';
 
 const mobileScreen = CommonHelpers.isMobile();
 const route = useRoute();
@@ -225,8 +226,79 @@ onMounted(() => {
 
                 <v-card-text class="pa-4 pa-md-6">
                     <v-row>
-                        <ConfigField v-for="field in section.fields" :key="field.data" :config="field"
-                            :data="tutorData" />
+                        <template v-for="field in section.fields" :key="field.data">
+                            <!-- Educations Field-->
+                            <template v-if="field.label === 'Educations'">
+                                <v-col v-for="edu in tutorData[section.sectionKey]" :key="edu.id" cols="12">
+                                    <v-card variant="tonal" color="secondary" rounded="sm" class="mb-3">
+                                        <v-card-title
+                                            class="d-flex flex-column flex-sm-row justify-space-between align-start align-sm-center">
+                                            <div class="mb-2 mb-sm-0 w-100">
+                                                <v-chip color="primary" size="small" variant="flat"
+                                                    class="mt-1 mt-sm-0 float-right">
+                                                    {{ edu.year_of_passing }} • {{ edu.grade_or_percentage }}
+                                                </v-chip>
+                                                <div class="text-subtitle-1 font-weight-medium text-wrap">
+                                                    {{ edu.level }} - {{ edu.institution_name }}
+                                                </div>
+                                                <div class="text-body-2 text-medium-emphasis">
+                                                    {{ edu.city }}, {{ edu.state }}
+                                                </div>
+                                            </div>
+
+                                        </v-card-title>
+                                        <v-card-text>
+                                            <v-row>
+                                                <v-col cols="6" sm="4">
+                                                    <div class="text-caption text-medium-emphasis">Board</div>
+                                                    <div class="text-body-2 font-weight-medium text-wrap">
+                                                        {{ edu.board_name || 'Not provided' }}
+                                                    </div>
+                                                </v-col>
+                                                <v-col cols="6" sm="4">
+                                                    <div class="text-caption text-medium-emphasis">Medium</div>
+                                                    <div class="text-body-2 font-weight-medium text-wrap">
+                                                        {{ edu.medium_of_study || 'Not provided' }}
+                                                    </div>
+                                                </v-col>
+                                                <v-col cols="6" sm="4">
+                                                    <div class="text-caption text-medium-emphasis">Status</div>
+                                                    <div class="text-body-2 font-weight-medium text-wrap">
+                                                        {{ edu.status || 'Not provided' }}
+                                                    </div>
+                                                </v-col>
+                                                <v-col cols="12" sm="6" v-if="edu.stream_specialization">
+                                                    <div class="text-caption text-medium-emphasis">
+                                                        Stream / Specialization
+                                                    </div>
+                                                    <div class="text-body-2 font-weight-medium text-wrap">
+                                                        {{ edu.stream_specialization }}
+                                                    </div>
+                                                </v-col>
+                                                <v-col cols="12" sm="6" v-if="edu.course_name">
+                                                    <div class="text-caption text-medium-emphasis">
+                                                        Course
+                                                    </div>
+                                                    <div class="text-body-2 font-weight-medium text-wrap">
+                                                        {{ edu.course_name }}
+                                                    </div>
+                                                </v-col>
+                                            </v-row>
+                                        </v-card-text>
+                                    </v-card>
+                                </v-col>
+                            </template>
+                            <!-- Other fields -->
+                            <template v-else>
+                                <ConfigField :config="field"
+                                    :data="tutorData[section.sectionKey] ? tutorData[section.sectionKey] : tutorData">
+                                    <template #Educations="{ item }">
+
+                                    </template>
+                                </ConfigField>
+                            </template>
+                        </template>
+
                     </v-row>
                 </v-card-text>
             </v-card>

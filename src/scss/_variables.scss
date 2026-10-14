@@ -18,14 +18,14 @@ $btn-letter-spacing: 0 !default;
 $rounded: (
   ) !default;
 $rounded: map-deep-merge((0: 0,
-      'sm': $border-radius-root * 0.5,
+      'sm': $border-radius-root * 1,
       null: $border-radius-root,
-      'md': $border-radius-root * 1,
-      'lg': $border-radius-root * 1.5,
+      'md': $border-radius-root * 2,
+      'lg': $border-radius-root * 3,
       'xl': $border-radius-root * 6,
       'pill': 9999px,
       'circle': 50%,
-      'shaped': $border-radius-root * 6 0),
+      'shaped': $border-radius-root * 4),
     $rounded
 );
 // Global Typography

@@ -1,0 +1,59 @@
+---
+description: Prefer Vuetify utilities and LightTheme colors; avoid custom CSS; layouts must work on mobile.
+globs: "**/*.{vue,scss,css}"
+alwaysApply: false
+---
+
+# Vuetify, theme colors, and mobile UI
+
+Use Vuetify components and utility classes first. Use theme tokens from `src/theme/LightTheme.ts`. Custom CSS is a last resort.
+
+## Theme colors
+
+- Bind colors with Vuetify props or token classes: `color="primary"`, `color="error"`, `class="text-primary"`, `bg-surface`, `text-lightText`, `text-darkText`.
+- Do not hardcode hex/rgb in templates, scoped CSS, or inline styles when a theme key exists (`primary`, `secondary`, `success`, `error`, `warning`, `info`, `surface`, `background`, `lightprimary`, `borderLight`, etc.).
+- New brand colors belong in `LightTheme.ts`, then consumed via props/classes — not one-off CSS.
+
+```vue
+<!-- ❌ BAD -->
+<span style="color: #3e78ff">Label</span>
+<div class="my-card">...</div>
+<style scoped>
+.my-card { background: #fff; padding: 16px; color: #1D2630; }
+</style>
+
+<!-- ✅ GOOD -->
+<span class="text-primary">Label</span>
+<v-card color="surface" class="pa-4 text-darkText">...</v-card>
+```
+
+## Prefer Vuetify over custom CSS
+
+- Spacing: `pa-*`, `ma-*`, `ga-*`. Layout: `d-flex`, `align-center`, `justify-space-between`, `flex-column`, `flex-md-row`.
+- Type: `text-h6`, `text-body-2`, `text-caption`, `text-medium-emphasis`.
+- Display: `d-none`, `d-md-flex`, `d-sm-block`.
+- Radius/elevation: `rounded-sm`, `elevation-2`, component props (`rounded="md"`, `variant="tonal"`).
+- Grids: `v-row` / `v-col` with `cols`, `sm`, `md`, `lg` — not CSS grid/flex in `<style>` for page layout.
+- Add `<style>` only for something Vuetify cannot do (third-party widget, one-off animation). Keep it scoped and still use `rgb(var(--v-theme-primary))` when a color is required.
+
+## Mobile (required)
+
+- Default to `cols="12"`; add `sm` / `md` / `lg` for wider screens.
+- Stack on small screens; do not rely on fixed `px` widths, `min-width` that overflows, or hover-only actions.
+- Use `order-*` / `order-md-*` when mobile order should differ from desktop.
+- Touch targets: buttons/icons at least usable on phone (`size` + padding classes, not tiny custom hit areas).
+- Hide/show with breakpoint classes, not JS screen sniffing, unless behavior cannot be expressed with utilities.
+
+```vue
+<!-- ❌ BAD: desktop-only row -->
+<v-row>
+  <v-col cols="4">...</v-col>
+  <v-col cols="8">...</v-col>
+</v-row>
+
+<!-- ✅ GOOD -->
+<v-row>
+  <v-col cols="12" md="4">...</v-col>
+  <v-col cols="12" md="8">...</v-col>
+</v-row>
+```

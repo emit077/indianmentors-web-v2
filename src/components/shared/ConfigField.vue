@@ -62,6 +62,7 @@ const shouldShow = computed(() => {
 
 <template>
   <v-col v-if="shouldShow" cols="12" :md="config.cols || 3">
+
     <v-card v-if="config.fieldType === 'Avatar'" variant="flat" class="text-center">
       <v-avatar size="120" class="elevation-4">
         <v-img v-if="fieldValue" :src="fieldValue" />

@@ -8,7 +8,8 @@ import MESSAGES from '@/utils/messages';
 
 // Axios Instance Configuration
 const axiosInstance: AxiosInstance = axios.create({
-  baseURL: 'http://127.0.0.1:8000',
+  // baseURL: 'http://127.0.0.1:8000',
+  baseURL: 'http://192.168.31.147:8000',
   timeout: 30000,
   headers: {
     'Content-Type': 'application/json'
@@ -160,7 +161,7 @@ class ApiHelper {
       const message = typeof showSuccessMessage === 'string' ? showSuccessMessage : response.data.message || MESSAGES.SAVE_SUCCESS;
       console.log('✅', message);
     }
-    
+
     return returnResponse ? response : ((response.data?.result || response.data) as T);
   }
 

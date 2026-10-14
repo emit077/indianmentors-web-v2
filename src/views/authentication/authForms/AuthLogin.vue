@@ -37,7 +37,7 @@ async function validate(values: any, { setErrors }: any) {
     <div>
       <div class="d-flex justify-space-between align-center mt-4">
         <h3 class="text-h3 text-center mb-0">Login</h3>
-        <router-link to="/auth/register1" class="text-primary text-decoration-none">Don't Have an account?</router-link>
+        <router-link to="/student/signup" class="text-primary text-decoration-none">Don't Have an account?</router-link>
       </div>
       <Form @submit="validate" class="mt-7 loginForm" v-slot="{ errors, isSubmitting }">
         <div class="mb-6">

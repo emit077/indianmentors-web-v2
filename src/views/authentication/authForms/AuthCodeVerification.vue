@@ -11,11 +11,13 @@ const authStore = useAuthStore();
 interface Props {
   mobileNumber?: string;
   otpToken?: string;
+  backLabel?: string;
 }
 
 const props = withDefaults(defineProps<Props>(), {
   mobileNumber: '',
-  otpToken: ''
+  otpToken: '',
+  backLabel: 'Back to Login'
 });
 
 // Emit events
@@ -117,7 +119,7 @@ onUnmounted(() => {
 <template>
   <div class="d-flex justify-space-between align-center mt-4">
     <h3 class="text-h3 text-center mb-0">Verification Code</h3>
-    <span class="text-primary text-decoration-none cursor-pointer" @click="$emit('back')">Back to Login</span>
+    <span class="text-primary text-decoration-none cursor-pointer" @click="$emit('back')">{{ props.backLabel }}</span>
   </div>
   <div>
     <p class="text-h6 my-6">

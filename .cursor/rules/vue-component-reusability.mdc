@@ -1,0 +1,38 @@
+---
+description: Clean, modular Vue — reuse shared components and extract UI instead of duplicating markup.
+globs: "**/*.{vue,ts}"
+alwaysApply: false
+---
+
+# Component reusability and clean Vue
+
+Prefer existing shared building blocks. Extract a component when the same UI or logic appears more than once. Keep views thin: data fetching + composition, not one-off markup copies.
+
+## Reuse first
+
+- Check `src/components/shared/` (`ConfigField`, `ComponentTitle`, `ProfileCard`, `UiParentCard`, `CardHeader`, etc.) and `src/components/datatable/` before writing new UI.
+- Follow existing config-driven patterns (page `config/*.ts` + `ConfigField`) instead of duplicating field/label markup.
+- Put cross-page UI in `src/components/shared/`. Keep page-only pieces next to the view if they are not reused yet.
+
+## Modular structure
+
+- `<script setup lang="ts">`. One component, one responsibility.
+- Props for data/config; emits for actions; slots for caller-specific content (`tableController`, headers, actions).
+- Extract repeated template blocks into a child component, not a huge copy-pasted `v-card` in every view.
+- Shared logic goes in composables or existing helpers (`@/utils/...`), not duplicated in each view.
+- Avoid `any` when a small interface (like field config) is enough.
+
+```vue
+<!-- ❌ BAD: duplicate card markup in every view -->
+<v-card class="pa-3"><div class="text-caption">{{ label }}</div>{{ value }}</v-card>
+
+<!-- ✅ GOOD: shared field + config -->
+<ConfigField :config="field" :data="profile" />
+```
+
+## Clean code
+
+- No unused props, imports, or empty `<style>` blocks.
+- Name components by role (`ProfileCard`, not `Card2`).
+- Keep templates readable: Vuetify layout classes on the component, not a wrapper `div` plus custom CSS.
+- If a view grows large (multiple sections with distinct UI), split into colocated components under that feature folder rather than one 400-line SFC.

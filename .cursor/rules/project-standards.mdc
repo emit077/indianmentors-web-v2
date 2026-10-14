@@ -1,0 +1,75 @@
+---
+alwaysApply: true
+---
+
+---
+
+description: Core architecture, UI, and coding standards for the Indian Mentors application
+alwaysApply: true
+
+---
+
+# Project Standards
+
+## Technology
+
+- Use the project's installed, supported Nuxt version, Vue 3, TypeScript, and Vuetify 3.
+- Use Vue Composition API and `<script setup lang="ts">`.
+- Use Vuetify components for all standard UI elements.
+- Use Pinia for global client state and TanStack Vue Query for server state.
+- Use the existing Django REST API through a centralized, typed API client.
+- Do not introduce another UI framework without explicit approval.
+
+## Mobile-first design
+
+- Design for 320px mobile screens first, then tablet and desktop.
+- Use responsive layouts and Vuetify's grid and display utilities.
+- Use bottom navigation for primary mobile destinations and a navigation drawer on larger screens.
+- Use cards or stacked layouts on mobile when desktop tables would overflow.
+- Keep forms, dialogs, menus, and action buttons usable on touch screens.
+- Never introduce horizontal page overflow.
+- Respect safe areas, virtual keyboards, reduced-motion preferences, and accessible touch targets.
+
+## Component architecture
+
+- Reuse shared components, layouts, composables, and design tokens.
+- Keep business logic separate from presentation components.
+- Use feature-based modules and consistent naming conventions.
+- Use Vuetify components before creating custom replacements.
+- Avoid giant page components and unnecessary abstractions.
+- Build shared components only when reuse provides clear value.
+
+## API and state management
+
+- Never hardcode production API data or fake successful API responses.
+- Centralize API calls, authentication, error handling, and pagination.
+- Use typed request and response models.
+- Handle loading, empty, success, error, and retry states.
+- Avoid duplicate requests and unnecessary refetches.
+- Never store secrets in frontend code.
+- Do not assume hiding a UI action provides authorization.
+
+## Security
+
+- Enforce all permissions on the backend.
+- Apply role-aware navigation and frontend route middleware.
+- Prevent unauthorized access to protected screens and records.
+- Never expose sensitive student, parent, or tutor data unnecessarily.
+- Follow secure session or token handling practices appropriate to the backend.
+
+## Quality
+
+- Use strict TypeScript and avoid `any` unless justified.
+- Include validation and accessible labels for forms.
+- Keep code readable and production-oriented.
+- Add tests for important logic and critical user workflows.
+- Run linting, type checks, tests, and production builds after meaningful changes.
+- Do not disable existing checks merely to make a build pass.
+
+## Workflow
+
+- Inspect existing files and dependencies before editing.
+- Propose a small implementation plan before major changes.
+- Implement one feature at a time.
+- Reuse existing conventions and avoid unrelated refactoring.
+- Report changed files, validation performed, known limitations, and next steps.

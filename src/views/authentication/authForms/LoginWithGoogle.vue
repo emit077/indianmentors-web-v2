@@ -1,8 +1,17 @@
 <template>
-  <v-list-item color="secondary" variant="tonal" href="#" rounded="md" class="" :disabled="isLoading" @click="handleGoogleLogin">
-    <v-img :src="googleImg" alt="social icon" class="mr-2 d-inline-flex" style="vertical-align: middle" width="20" height="20" />
+  <!-- <v-list-item color="secondary" variant="tonal" href="#" rounded="md" class="" :disabled="isLoading"
+    @click="handleGoogleLogin">
+    <v-img :src="googleImg" alt="social icon" class="mr-2 d-inline-flex" style="vertical-align: middle" width="20"
+      height="20" />
     {{ isLoading ? 'Signing in...' : 'Continue with Google' }}
-  </v-list-item>
+  </v-list-item> -->
+
+  <v-btn color="secondary" variant="tonal" href="#" rounded="md" size="large" block :disabled="isLoading"
+    @click="handleGoogleLogin">
+    <v-img :src="googleImg" alt="social icon" class="mr-2 d-inline-flex" style="vertical-align: middle" width="20"
+      height="20" />
+    {{ isLoading ? 'Signing in...' : 'Continue with Google' }}
+  </v-btn>
 </template>
 
 <script setup lang="ts">
