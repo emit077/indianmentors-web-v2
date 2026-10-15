@@ -4,20 +4,30 @@ import { useAuthStore } from '@/stores/auth';
 import { api } from '@/utils/api/axios';
 import URLS from '@/utils/urls';
 import { router } from '@/router';
-
+import { mdiArrowLeft } from '@mdi/js';
 const authStore = useAuthStore();
 
 // Props
 interface Props {
   mobileNumber?: string;
+  dialingCode?: string;
   otpToken?: string;
   backLabel?: string;
 }
 
 const props = withDefaults(defineProps<Props>(), {
   mobileNumber: '',
+  dialingCode: '',
   otpToken: '',
   backLabel: 'Back to Login'
+});
+
+const sentTo = computed(() => {
+  const number = props.mobileNumber.trim();
+  const code = props.dialingCode.trim();
+  if (!number) return '';
+  if (!code) return number;
+  return `${code.startsWith('+') ? code : `+${code}`} ${number}`;
 });
 
 // Emit events
@@ -117,39 +127,26 @@ onUnmounted(() => {
 </script>
 
 <template>
-  <div class="d-flex justify-space-between align-center mt-4">
-    <h3 class="text-h3 text-center mb-0">Verification Code</h3>
-    <span class="text-primary text-decoration-none cursor-pointer" @click="$emit('back')">{{ props.backLabel }}</span>
+  <div class="mt-4">
+    <div
+      class="text-primary text-decoration-none cursor-pointer mb-4 d-flex align-center align-middle font-weight-medium"
+      @click="$emit('back')">
+      <v-icon :icon="mdiArrowLeft" size="18" class="mr-1 " />
+      {{ props.backLabel }}
+    </div>
+    <h3 class="text-h3  mb-0">Verification Code</h3>
   </div>
   <div>
     <p class="text-h6 my-6">
-      Verification code sent to <strong>{{ props.mobileNumber }}</strong>
+      Verification code sent to <strong>{{ sentTo }}</strong>
     </p>
 
     <v-form class="mt-7 loginForm" @submit.prevent="handleVerifyOTP">
-      <v-otp-input
-        type="number"
-        v-model="otp"
-        length="6"
-        class="mb-5"
-        rounded="md"
-        single-line
-        height="46"
-        :disabled="loading"
-        @finish="handleVerifyOTP"
-      ></v-otp-input>
+      <v-otp-input type="number" v-model="otp" length="6" class="mb-5" rounded="md" single-line height="46"
+        :disabled="loading" @finish="handleVerifyOTP"></v-otp-input>
 
-      <v-btn
-        color="primary"
-        block
-        class="mt-8"
-        variant="flat"
-        rounded="md"
-        size="large"
-        type="submit"
-        :loading="loading"
-        :disabled="!otp || otp.length !== 6 || loading"
-      >
+      <v-btn color="primary" block class="mt-8" variant="flat" rounded="md" size="large" type="submit"
+        :loading="loading" :disabled="!otp || otp.length !== 6 || loading">
         {{ loading ? 'Verifying...' : 'Continue' }}
       </v-btn>
     </v-form>
@@ -165,16 +162,10 @@ onUnmounted(() => {
     </v-alert>
 
     <!-- Resend OTP -->
-    <div class="d-sm-flex align-start justify-space-between mt-6">
+    <div class="d-flex align-center justify-space-between mt-6">
       <div class="text-subtitle-1 font-weight-regular">Not received Code?</div>
-      <v-btn
-        variant="text"
-        color="primary"
-        class="text-capitalize mr-n2 mt-2 mt-sm-0"
-        :disabled="resendCooldown > 0 || resendLoading"
-        :loading="resendLoading"
-        @click="handleResendOTP"
-      >
+      <v-btn variant="text" color="primary" class="text-capitalize flex-shrink-0 mr-n2"
+        :disabled="resendCooldown > 0 || resendLoading" :loading="resendLoading" @click="handleResendOTP">
         {{ resendCooldown > 0 ? `Resend in ${resendCooldown}s` : 'Resend Code' }}
       </v-btn>
     </div>
@@ -185,10 +176,12 @@ onUnmounted(() => {
 .loginForm {
   .v-otp-input {
     padding: 0;
+
     .v-otp-input__content {
       max-width: 95%;
       padding: 0;
     }
+
     .v-otp-input__field {
       font-size: 13px;
       font-weight: bold;

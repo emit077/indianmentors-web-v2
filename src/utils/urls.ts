@@ -20,6 +20,7 @@ const URLS = {
   TUTOR_PROFILE: '/api/tutors/profile/',
   TUTOR_PROFILE_CREATE: '/api/tutors/profile/create/',
   TUTOR_PROFILE_UPDATE: '/api/tutors/profile/update/',
+  COUNTRIES: '/api/master/countries/',
 } as const;
 
 export default URLS;

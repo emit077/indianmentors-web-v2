@@ -13,19 +13,19 @@ const DefaultTheme: ThemeTypes = {
     // ============================================
     // Primary Colors - Main Brand Colors
     // ============================================
-    primary: '#3e78ff',
-    lightprimary: '#E9F0FF',
-    darkprimary: '#3F78FF',
-    primary50: '#F0F5FF',
-    primary100: '#E9F0FF',
-    primary200: '#b8ceff',
-    primary300: '#87a8ff',
-    primary400: '#5f8bff',
-    primary500: '#3e78ff',
-    primary600: '#2960ff',
-    primary700: '#0047ff',
-    primary800: '#0038cc',
-    primary900: '#002999',
+    primary: '#2563EB',
+    lightprimary: '#2563EB',
+    darkprimary: '#2563EB',
+    primary50: '#EFF6FF',
+    primary100: '#DBEAFE',
+    primary200: '#BFDBFE',
+    primary300: '#93C5FD',
+    primary400: '#60A5FA',
+    primary500: '#3B82F6',
+    primary600: '#2563EB',
+    primary700: '#1D4ED8',
+    primary800: '#1E40AF',
+    primary900: '#1E3A8A',
 
     // ============================================
     // Secondary Colors - Supporting Colors

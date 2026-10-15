@@ -21,6 +21,11 @@ const AuthRoutes = {
       component: () => import('@/views/authentication/auth/StudentSignupPage.vue')
     },
     {
+      name: 'MentorSignup',
+      path: '/mentor/signup',
+      component: () => import('@/views/authentication/auth/MentorSignupPage.vue')
+    },
+    {
       name: 'Forgot Password',
       path: '/auth/forgot-pwd1',
       component: () => import('@/views/authentication/auth/ForgotPwd1.vue')

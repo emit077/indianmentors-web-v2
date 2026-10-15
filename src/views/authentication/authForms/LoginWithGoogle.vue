@@ -6,7 +6,7 @@
     {{ isLoading ? 'Signing in...' : 'Continue with Google' }}
   </v-list-item> -->
 
-  <v-btn color="secondary" variant="tonal" href="#" rounded="md" size="large" block :disabled="isLoading"
+  <v-btn :color="color" :variant="variant" href="#" rounded="md" size="large" block :disabled="isLoading"
     @click="handleGoogleLogin">
     <v-img :src="googleImg" alt="social icon" class="mr-2 d-inline-flex" style="vertical-align: middle" width="20"
       height="20" />
@@ -24,11 +24,15 @@ import googleImg from '@/assets/images/icons/google.svg';
 interface Props {
   redirectTo?: string;
   showSuccessMessage?: boolean;
+  variant?: 'flat' | 'text' | 'elevated' | 'tonal' | 'outlined' | 'plain';
+  color?: string;
 }
 
 const props = withDefaults(defineProps<Props>(), {
   redirectTo: '/dashboard/default',
-  showSuccessMessage: true
+  showSuccessMessage: true,
+  variant: 'tonal',
+  color: 'secondary'
 });
 
 // Emits
