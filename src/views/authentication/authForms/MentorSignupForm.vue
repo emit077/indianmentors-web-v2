@@ -124,6 +124,7 @@ async function confirmMentor() {
         <router-link to="/terms-of-use" class="text-primary text-decoration-underline">Terms of Use</router-link>
         and
         <router-link to="/privacy-policy" class="text-primary text-decoration-underline">Privacy Policy</router-link>.
+        Your next chapter is in safe hands.
       </p>
 
       <v-alert v-if="errorMessage" color="error" class="mt-4" closable @click:close="errorMessage = ''">

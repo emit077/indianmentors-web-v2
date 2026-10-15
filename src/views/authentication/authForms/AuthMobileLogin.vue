@@ -47,7 +47,7 @@ async function handleMobileLogin() {
 
       <v-btn color="primary" :loading="loading" block class="mt-4" variant="flat" size="large" rounded="md"
         type="submit">
-        Send OTP
+        Continue
       </v-btn>
 
       <v-alert v-if="errorMessage" color="error" class="mt-4" closable @click:close="errorMessage = ''">
