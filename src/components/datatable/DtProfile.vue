@@ -1,9 +1,12 @@
 <template>
   <div class="d-flex align-center gap-3">
-    <v-progress-circular :model-value="profileData.profile_completion_per" :rotate="180" :size="50" :width="5" color="primary">
+    <v-progress-circular :model-value="profileData.profile_completion_per" :rotate="180" :size="50" :width="5"
+      color="primary">
       <v-avatar :size="avatarSize" color="primary" variant="tonal" class="">
-        <v-img v-if="profileData.gender === 'Male'" :src="male" :alt="profileData.name" :size="avatarSize" class="mt-1" />
-        <v-img v-else-if="profileData.gender === 'Female'" :src="female" :alt="profileData.name" :size="avatarSize" class="mt-1" />
+        <v-img v-if="profileData.gender === 'Male'" :src="male" :alt="profileData.name" :size="avatarSize"
+          class="mt-1" />
+        <v-img v-else-if="profileData.gender === 'Female'" :src="female" :alt="profileData.name" :size="avatarSize"
+          class="mt-1" />
         <span v-else class="text-body-1 font-weight-bold"> -- </span>
         <!-- <v-img :src="profileData.profile_picture" :alt="profileData.name" :size="avatarSize" /> -->
       </v-avatar>
@@ -19,25 +22,15 @@
         <!-- {{ profileData }} -->
         <div class="flex-grow-1" style="min-width: 0">
           <div class="d-flex align-center">
-            <div
-              v-if="showNavigation"
-              @click.stop="handleNavigate"
-              class="text-subtitle-1 font-weight-medium text-truncate name-link"
-              style="max-width: 90%"
-            >
-              {{ profileData.name || 'N/A' }}
+            <div v-if="showNavigation" @click.stop="handleNavigate"
+              class="text-subtitle-1 font-weight-medium text-truncate name-link" style="max-width: 90%">
+              {{ profileData.full_name || 'N/A' }}
             </div>
             <div v-else class="text-subtitle-1 font-weight-medium text-truncate">
-              {{ profileData.name || 'N/A' }}
+              {{ profileData.full_name || 'N/A' }}
             </div>
-            <v-icon
-              v-if="profileData.is_profile_verified"
-              :icon="mdiCheckDecagram"
-              size="20"
-              class="ml-1"
-              color="success"
-              title="Profile Verified"
-            />
+            <v-icon v-if="profileData.is_profile_verified" :icon="mdiCheckDecagram" size="20" class="ml-1"
+              color="success" title="Profile Verified" />
           </div>
           <div v-if="showSubtitle" class="text-body-2 font-weight-medium">+91 {{ profileData.mobile || '' }}</div>
         </div>

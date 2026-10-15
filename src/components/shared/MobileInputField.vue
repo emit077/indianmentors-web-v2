@@ -11,6 +11,8 @@ export interface CountryOption {
     dialing_code: string;
     abbreviation: string;
     is_active: boolean;
+    max_length: number;
+    time_zone: string;
 }
 
 const props = withDefaults(
@@ -55,6 +57,11 @@ const selectedFlag = computed(() =>
 
 const selectedCode = computed(() => selectedCountry.value?.dialing_code || props.dialingCode);
 
+const mobileMaxLength = computed(() => {
+    const length = selectedCountry.value?.max_length;
+    return typeof length === 'number' && length > 0 ? length : 15;
+});
+
 const fieldRules = computed(() => props.rules ?? defaultRules());
 
 const filteredCountries = computed(() => {
@@ -75,7 +82,13 @@ const filteredCountries = computed(() => {
 function defaultRules() {
     return [
         (value: string) => !props.required || !!value || `${props.label} is required`,
-        (value: string) => !value || /^\d{6,15}$/.test(value) || 'Enter a valid mobile number'
+        (value: string) => {
+            if (!value) return true;
+            const max = mobileMaxLength.value;
+            const min = Math.min(6, max);
+            if (value.length >= min && value.length <= max) return true;
+            return min === max ? `Enter ${max} digits` : `Enter ${min}–${max} digits`;
+        }
     ];
 }
 
@@ -86,7 +99,7 @@ function countryFlagIcon(abbreviation: string) {
 }
 
 function onMobileInput(value: string) {
-    emit('update:modelValue', value.replace(/\D/g, '').slice(0, 15));
+    emit('update:modelValue', value.replace(/\D/g, '').slice(0, mobileMaxLength.value));
 }
 
 function selectCountry(country: CountryOption) {
@@ -102,6 +115,12 @@ function selectFirstMatch() {
 
 watch(menuOpen, (open) => {
     if (open) countryQuery.value = '';
+});
+
+watch(mobileMaxLength, (max) => {
+    if (props.modelValue.length > max) {
+        emit('update:modelValue', props.modelValue.slice(0, max));
+    }
 });
 
 onMounted(async () => {
@@ -127,7 +146,8 @@ onMounted(async () => {
         <!-- <v-label v-if="label" class="mb-1 text-body-2">{{ label }}</v-label> -->
         <v-text-field :model-value="modelValue" :placeholder="placeholder" :rules="fieldRules" :aria-label="label"
             density="comfortable" :required="required" hide-details variant="outlined" color="primary" type="tel"
-            inputmode="numeric" maxlength="15" autocomplete="tel" @update:model-value="onMobileInput">
+            inputmode="numeric" :maxlength="mobileMaxLength" autocomplete="tel"
+            @update:model-value="onMobileInput">
             <template #prepend-inner>
                 <v-menu v-model="menuOpen" location="bottom start" :close-on-content-click="false" width="300">
                     <template #activator="{ props: menuProps }">

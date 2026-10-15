@@ -7,6 +7,7 @@ import { useCustomizerStore } from '../../../stores/customizer';
 import NotificationDD from './NotificationDD.vue';
 import ProfileDD from './ProfileDD.vue';
 import Searchbar from './SearchBarPanel.vue';
+import CountryDropdown from '@/components/shared/CountryDropdown.vue';
 
 const customizer = useCustomizerStore();
 const priority = ref(customizer.setHorizontalLayout ? 0 : 0);
@@ -74,6 +75,8 @@ watch(priority, (newPriority) => {
     <!-- ---------------------------------------------- -->
     <!---right part -->
     <!-- ---------------------------------------------- -->
+
+    <CountryDropdown />
 
     <!-- ---------------------------------------------- -->
     <!-- Notification -->

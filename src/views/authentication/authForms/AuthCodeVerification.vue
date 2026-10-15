@@ -4,7 +4,9 @@ import { useAuthStore } from '@/stores/auth';
 import { api } from '@/utils/api/axios';
 import URLS from '@/utils/urls';
 import { router } from '@/router';
-import { mdiArrowLeft } from '@mdi/js';
+import { mdiArrowLeft, mdiCheck } from '@mdi/js';
+import AuthSnackbar from '@/components/shared/AuthSnackbar.vue';
+import { useAuthSnackbar } from '@/composables/useAuthSnackbar';
 const authStore = useAuthStore();
 
 // Props
@@ -37,13 +39,14 @@ const $emit = defineEmits<{
 
 const otp = ref('');
 const loading = ref(false);
-const errorMessage = ref('');
-const successMessage = ref('');
+const verified = ref(false);
+const { visible, message, type, showError, showSuccess } = useAuthSnackbar();
 const resendLoading = ref(false);
 const resendCooldown = ref(0);
 
 // Countdown timer for resend
 let countdownInterval: ReturnType<typeof setInterval> | null = null;
+let redirectTimer: ReturnType<typeof setTimeout> | null = null;
 
 onMounted(() => {
   // Start countdown if needed
@@ -71,12 +74,10 @@ const startResendCountdown = () => {
 const handleVerifyOTP = async () => {
   // Validate OTP
   if (!otp.value || otp.value.length !== 6) {
-    errorMessage.value = 'Please enter a valid 6-digit OTP';
+    showError('Please enter a valid 6-digit OTP');
     return;
   }
   loading.value = true;
-  errorMessage.value = '';
-  successMessage.value = '';
   try {
     const response = await api.post(
       URLS.USER_VERIFY_OTP,
@@ -89,19 +90,25 @@ const handleVerifyOTP = async () => {
     //set local storage access token
     localStorage.setItem('access_token', response.headers['access_token']);
     authStore.setUser(response.data.result.user);
-
-    router.push('/dashboard/default');
-  } catch (error) {
-    console.error('Unexpected error:', error);
+    verified.value = true;
+    redirectTimer = setTimeout(goToDashboard, 1800);
+  } catch (error: any) {
+    showError(error.response?.data?.message || error.response?.data?.detail || 'Verification failed. Please try again.');
   } finally {
     loading.value = false;
   }
 };
+function goToDashboard() {
+  if (redirectTimer) {
+    clearTimeout(redirectTimer);
+    redirectTimer = null;
+  }
+  router.push('/dashboard/');
+}
+
 /* Resend OTP */
 const handleResendOTP = async () => {
   resendLoading.value = true;
-  errorMessage.value = '';
-  successMessage.value = '';
   try {
     const response = await api.post(
       URLS.USER_RESEND_OTP,
@@ -111,9 +118,9 @@ const handleResendOTP = async () => {
         returnResponse: true // To access response headers
       }
     );
-    successMessage.value = response.data.result.message || 'OTP resent successfully!';
+    showSuccess('OTP resent successfully!');
   } catch (error: any) {
-    errorMessage.value = error.response?.data?.message || error.message || 'Failed to resend OTP. Please try again.';
+    showError('Failed to resend OTP. Please try again.');
   } finally {
     resendLoading.value = false;
   }
@@ -123,11 +130,24 @@ onUnmounted(() => {
   if (countdownInterval) {
     clearInterval(countdownInterval);
   }
+  if (redirectTimer) {
+    clearTimeout(redirectTimer);
+  }
 });
 </script>
 
 <template>
-  <div class="mt-4">
+  <div v-if="verified" class="text-center justify-center align-center align-middle d-flex flex-column"
+    style="height: calc(40vh);">
+    <v-avatar color="success" size="100" class="mb-5">
+      <v-icon :icon="mdiCheck" size="60" />
+    </v-avatar>
+    <h3 class="text-h3 mb-2">Successfully Verified</h3>
+    <!-- <p class="text-body-1 text-medium-emphasis mb-6">
+      Your number is confirmed. Opening your dashboard.
+    </p> -->
+  </div>
+  <div v-else class="mt-4">
     <div
       class="text-primary text-decoration-none cursor-pointer mb-4 d-flex align-center align-middle font-weight-medium"
       @click="$emit('back')">
@@ -136,7 +156,7 @@ onUnmounted(() => {
     </div>
     <h3 class="text-h3  mb-0">Verification Code</h3>
   </div>
-  <div>
+  <div v-if="!verified">
     <p class="text-h6 my-6">
       Verification code sent to <strong>{{ sentTo }}</strong>
     </p>
@@ -151,15 +171,7 @@ onUnmounted(() => {
       </v-btn>
     </v-form>
 
-    <!-- Error Message -->
-    <v-alert v-if="errorMessage" type="error" class="mt-4" closable @click:close="errorMessage = ''">
-      {{ errorMessage }}
-    </v-alert>
-
-    <!-- Success Message -->
-    <v-alert v-if="successMessage" type="success" class="mt-4">
-      {{ successMessage }}
-    </v-alert>
+    <AuthSnackbar v-model="visible" :message="message" :type="type" />
 
     <!-- Resend OTP -->
     <div class="d-flex align-center justify-space-between mt-6">

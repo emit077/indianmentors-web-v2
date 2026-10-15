@@ -5,10 +5,13 @@ import { useAuthStore } from '@/stores/auth';
 import { useRouter } from 'vue-router';
 import { Form } from 'vee-validate';
 import { emailRules, passwordRules } from '@/utils/rules';
+import AuthSnackbar from '@/components/shared/AuthSnackbar.vue';
+import { useAuthSnackbar } from '@/composables/useAuthSnackbar';
 
 const authStore = useAuthStore();
 const router = useRouter();
 
+const { visible, message, type, showError } = useAuthSnackbar();
 const checkbox = ref(false);
 const valid = ref(false);
 const show1 = ref(false);
@@ -16,17 +19,12 @@ const password = ref('');
 const username = ref('');
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
-async function validate(values: any, { setErrors }: any) {
+async function validate() {
   try {
-    // Step 1: Send login credentials to receive OTP
-    const result = await authStore.sendLoginOTP(username.value, password.value);
-
-    // Redirect to OTP verification page
+    await authStore.sendLoginOTP(username.value, password.value);
     router.push('/auth/verify-otp');
   } catch (error: any) {
-    // Handle error
-    const errorMessage = error.response?.data?.message || error.message || 'Login failed. Please try again.';
-    setErrors({ apiError: errorMessage });
+    showError(error.response?.data?.message || error.message || 'Login failed. Please try again.');
   }
 }
 </script>
@@ -39,7 +37,7 @@ async function validate(values: any, { setErrors }: any) {
         <h3 class="text-h3 text-center mb-0">Login</h3>
         <router-link to="/student/signup" class="text-primary text-decoration-none">Don't Have an account?</router-link>
       </div>
-      <Form @submit="validate" class="mt-7 loginForm" v-slot="{ errors, isSubmitting }">
+      <Form @submit="validate" class="mt-7 loginForm" v-slot="{ isSubmitting }">
         <div class="mb-6">
           <v-label>Email Address</v-label>
           <v-text-field
@@ -104,10 +102,8 @@ async function validate(values: any, { setErrors }: any) {
         >
           Login</v-btn
         >
-        <div v-if="errors.apiError" class="mt-2">
-          <v-alert color="error">{{ errors.apiError }}</v-alert>
-        </div>
       </Form>
+      <AuthSnackbar v-model="visible" :message="message" :type="type" />
     </div>
   </div>
 </template>

@@ -72,8 +72,8 @@ onMounted(async () => {
 <template>
   <ComponentTitle :config="pageConfig.pageHeaderConfig" />
   <!-- Search and Filter Section -->
-  <v-row class="mb-4">
-    <v-col cols="12" md="5" class="order-2 order-md-1">
+  <v-row class="mb-4 align-center">
+    <v-col cols="8" md="5" class=" order-md-1">
       <v-text-field v-model="searchQuery" placeholder="Search students..." variant="outlined" clearable hide-details
         @update:model-value="handleSearch" @keyup.enter="handleSearch">
         <template v-slot:prepend-inner>
@@ -83,7 +83,7 @@ onMounted(async () => {
         </template>
       </v-text-field>
     </v-col>
-    <v-col cols="12" md="7" class="justify-end d-flex order-1 order-md-2">
+    <v-col cols="4" md="7" class="justify-end d-flex order-md-2">
       <slot name="tableController">
         <v-btn class="" color="primary" size="small" :icon="mdiTuneVariant" rounded="sm" variant="tonal" title="Filter">
         </v-btn>

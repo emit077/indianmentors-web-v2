@@ -39,7 +39,7 @@ const props = defineProps<{
               <div class="flex-grow-1" style="min-width: 0">
                 <div class="d-flex align-center text-subtitle-1">
                   <div class="text-subtitle-1 font-weight-medium text-truncate" style="max-width: 90%">
-                    {{ data.user.name }}
+                    {{ data.user.full_name }}
                   </div>
                   <v-icon :icon="mdiCheckDecagram" color="success" />
                 </div>

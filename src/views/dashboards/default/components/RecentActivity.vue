@@ -33,9 +33,9 @@
             <p class="text-body-2 text-medium-emphasis mb-2">{{ activity.description }}</p>
             <div v-if="activity.user" class="d-flex align-center">
               <v-avatar size="20" class="me-2">
-                <v-img :src="activity.user.avatar" :alt="activity.user.name" />
+                <v-img :src="activity.user.avatar" :alt="activity.user.full_name" />
               </v-avatar>
-              <span class="text-caption">{{ activity.user.name }}</span>
+              <span class="text-caption">{{ activity.user.full_name }}</span>
             </div>
           </div>
         </v-timeline-item>

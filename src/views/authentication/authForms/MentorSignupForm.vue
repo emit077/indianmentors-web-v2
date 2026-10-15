@@ -5,8 +5,10 @@ import type { AxiosResponse } from 'axios';
 import { api } from '@/utils/api/axios';
 import URLS from '@/utils/urls';
 import $keys from '@/utils/keys';
-import { emailRules, requiredRule } from '@/utils/rules';
+import { requiredRule } from '@/utils/rules';
 import MobileInputField from '@/components/shared/MobileInputField.vue';
+import AuthSnackbar from '@/components/shared/AuthSnackbar.vue';
+import { useAuthSnackbar } from '@/composables/useAuthSnackbar';
 import mentorIllustration from '@/assets/images/auth/mentor-confirm.png';
 
 const emit = defineEmits<{
@@ -18,13 +20,11 @@ const form = ref();
 const firstName = ref('');
 const lastName = ref('');
 const mobile = ref('');
-const email = ref('');
 const countryId = ref<number | null>(null);
 const dialingCode = ref('');
 const loading = ref(false);
 const confirmDialog = ref(false);
-const errorMessage = ref('');
-const successMessage = ref('');
+const { visible, message, type, showError, showSuccess } = useAuthSnackbar();
 
 const firstNameRules = [
   ...requiredRule('First name'),
@@ -54,22 +54,20 @@ function cancelConfirm() {
 async function confirmMentor() {
   if (countryId.value == null) {
     confirmDialog.value = false;
-    errorMessage.value = 'Select a country before continuing.';
+    showError('Select a country before continuing.');
     return;
   }
 
   loading.value = true;
-  errorMessage.value = '';
-  successMessage.value = '';
 
   try {
     const response = (await api.post(
       URLS.USER_SIGNUP,
       {
-        name: `${firstName.value.trim()} ${lastName.value.trim()}`.replace(/\s+/g, ' '),
+        first_name: firstName.value.trim(),
+        last_name: lastName.value.trim(),
         mobile: mobile.value.trim(),
         country_id: countryId.value,
-        email: email.value.trim(),
         account_type: $keys.ACCOUNT_TEACHER
       },
       { returnResponse: true }
@@ -81,10 +79,11 @@ async function confirmMentor() {
       return;
     }
 
-    successMessage.value = response.data?.message || 'Account created. Sign in to continue.';
+    showSuccess(response.data?.message || 'Account created. Sign in to continue.');
   } catch (error: any) {
-    errorMessage.value =
-      error.response?.data?.message || error.response?.data?.detail || 'Could not create your account. Please try again.';
+    showError(
+      error.response?.data?.message || error.response?.data?.detail || 'Could not create your account. Please try again.'
+    );
   } finally {
     loading.value = false;
     confirmDialog.value = false;
@@ -111,10 +110,6 @@ async function confirmMentor() {
       <MobileInputField v-model="mobile" v-model:country-id="countryId" v-model:dialing-code="dialingCode"
         label="Mobile" class="mb-4" />
 
-      <v-text-field v-model="email" :rules="emailRules" class="mb-4" aria-label="email" label="Email"
-        density="comfortable" required variant="outlined" color="primary" placeholder="aarav.sharma@email.com"
-        type="email" autocomplete="email" hide-details />
-
       <v-btn class="mt-4" color="primary" :loading="loading" block variant="flat" size="large" rounded="md"
         type="submit">
         Continue
@@ -126,15 +121,8 @@ async function confirmMentor() {
         <router-link to="/privacy-policy" class="text-primary text-decoration-underline">Privacy Policy</router-link>.
         Your next chapter is in safe hands.
       </p>
-
-      <v-alert v-if="errorMessage" color="error" class="mt-4" closable @click:close="errorMessage = ''">
-        {{ errorMessage }}
-      </v-alert>
-      <v-alert v-if="successMessage" color="success" class="mt-4">
-        {{ successMessage }}
-        <router-link to="/auth/login" class="text-primary text-decoration-none d-block mt-2">Sign in</router-link>
-      </v-alert>
     </v-form>
+    <AuthSnackbar v-model="visible" :message="message" :type="type" />
 
     <v-dialog v-model="confirmDialog" max-width="440" persistent>
       <v-card rounded="lg">

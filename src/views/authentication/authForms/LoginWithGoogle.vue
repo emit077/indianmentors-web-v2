@@ -12,6 +12,7 @@
       height="20" />
     {{ isLoading ? 'Signing in...' : 'Continue with Google' }}
   </v-btn>
+  <AuthSnackbar v-model="visible" :message="message" :type="type" />
 </template>
 
 <script setup lang="ts">
@@ -19,6 +20,8 @@ import { ref, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
 import { useAuthStore } from '@/stores/auth';
 import googleImg from '@/assets/images/icons/google.svg';
+import AuthSnackbar from '@/components/shared/AuthSnackbar.vue';
+import { useAuthSnackbar } from '@/composables/useAuthSnackbar';
 
 // Props
 interface Props {
@@ -45,6 +48,7 @@ const emit = defineEmits<{
 const isLoading = ref(false);
 const errorMessage = ref('');
 const successMessage = ref('');
+const { visible, message, type, showError, showSuccess } = useAuthSnackbar();
 
 // Stores and router
 const authStore = useAuthStore();
@@ -113,6 +117,7 @@ const handleGoogleResponse = async (response: any) => {
     // Show success message
     if (props.showSuccessMessage) {
       successMessage.value = `Welcome, ${googleUser.name}!`;
+      showSuccess(successMessage.value);
     }
 
     // Emit success event
@@ -125,6 +130,7 @@ const handleGoogleResponse = async (response: any) => {
   } catch (error) {
     console.error('Google login error:', error);
     errorMessage.value = 'Failed to sign in with Google. Please try again.';
+    showError(errorMessage.value);
     emit('error', errorMessage.value);
   } finally {
     isLoading.value = false;
@@ -135,6 +141,7 @@ const handleGoogleResponse = async (response: any) => {
 const handleGoogleLogin = () => {
   if (!window.google) {
     errorMessage.value = 'Google authentication is not available. Please refresh the page.';
+    showError(errorMessage.value);
     return;
   }
 
@@ -143,6 +150,7 @@ const handleGoogleLogin = () => {
   } catch (error) {
     console.error('Google login prompt error:', error);
     errorMessage.value = 'Failed to open Google login. Please try again.';
+    showError(errorMessage.value);
   }
 };
 
@@ -167,6 +175,7 @@ const handleGoogleLoginAlternative = async () => {
   } catch (error) {
     console.error('Google OAuth error:', error);
     errorMessage.value = 'Failed to initiate Google login. Please try again.';
+    showError(errorMessage.value);
     isLoading.value = false;
   }
 };

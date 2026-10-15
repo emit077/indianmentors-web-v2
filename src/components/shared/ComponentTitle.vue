@@ -14,17 +14,16 @@ const props = defineProps({
           <template v-slot:divider>
             <v-icon :icon="mdiChevronRight"></v-icon>
           </template>
-        </v-breadcrumbs> -->
+</v-breadcrumbs> -->
 
         <div class="d-flex">
           <div class="d-flex align-center" v-for="(breadcrumb, i) in props.config.breadcrumbs" :key="breadcrumb.title">
             <v-icon size="small" class="opacity-30" v-if="Number(i) > 0" :icon="mdiChevronRight"></v-icon>
-            <RouterLink :to="breadcrumb.to" :disabled="breadcrumb.disabled" style="text-decoration: none; display: inline-block">
-              <span
-                class="text-subtitle-1 text-hover-primary"
-                :class="breadcrumb.disabled ? 'opacity-70 font-weight-300 text-secondary' : 'font-weight-400 cursor-pointer router-link'"
-                >{{ breadcrumb.title }}</span
-              >
+            <RouterLink :to="breadcrumb.to" :disabled="breadcrumb.disabled"
+              style="text-decoration: none; display: inline-block">
+              <span class="text-subtitle-1 text-hover-primary"
+                :class="breadcrumb.disabled ? 'opacity-70 font-weight-300 text-secondary' : 'font-weight-400 cursor-pointer router-link'">{{
+                  breadcrumb.title }}</span>
             </RouterLink>
           </div>
         </div>
@@ -51,6 +50,7 @@ const props = defineProps({
   text-decoration: none;
   display: inline-block;
   color: rgb(var(--v-theme-secondary));
+
   &:hover {
     color: rgb(var(--v-theme-primary));
     text-decoration: underline !important;

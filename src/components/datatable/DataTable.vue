@@ -1,21 +1,8 @@
 <template>
-  <v-data-table-server
-    color="primary"
-    v-model:items-per-page="localItemsPerPage"
-    :headers="headers"
-    :items="items"
-    :items-length="totalItems"
-    :loading="loading"
-    :search="searchTrigger"
-    :item-value="itemValue"
-    :item-selectable="itemSelectable"
-    :show-select="showSelect"
-    :show-expand="showExpand"
-    hide-default-footer
-    class="data-table mt-5"
-    @update:options="handleOptionsUpdate"
-    @click:row="handleRowClick"
-  >
+  <v-data-table-server color="primary" v-model:items-per-page="localItemsPerPage" :headers="headers" :items="items"
+    :items-length="totalItems" :loading="loading" :search="searchTrigger" :item-value="itemValue"
+    :item-selectable="itemSelectable" :show-select="showSelect" :show-expand="showExpand" hide-default-footer
+    class="data-table mt-5" @update:options="handleOptionsUpdate" @click:row="handleRowClick">
     <!-- Loading State -->
     <template v-slot:loading>
       <v-skeleton-loader type="table-row@10" />
@@ -25,17 +12,8 @@
     <template v-for="header in headers" :key="header.key" #[`item.${header.key}`]="{ item, value }">
       <!-- profile UI -->
       <div v-if="header.formatType == $keys.DT_PROFILE">
-        <DtProfile
-          :profile-data="item.user"
-          :avatar-size="40"
-          :sortable="false"
-          active-color="success"
-          inactive-color="grey"
-          :show-subtitle="true"
-          :show-navigation="true"
-          :navigation-route="''"
-          @navigate=""
-        />
+        <DtProfile :profile-data="item.user" :avatar-size="40" :sortable="false" active-color="success"
+          inactive-color="grey" :show-subtitle="true" :show-navigation="true" :navigation-route="''" @navigate="" />
       </div>
       <!-- custome UI -->
       <div v-else-if="header.formatType == $keys.DT_CUSTOM">
@@ -273,6 +251,7 @@ defineExpose({
   }
 
   .data-table {
+
     :deep(.v-data-table__td),
     :deep(.v-data-table__th) {
       padding: 12px 8px;

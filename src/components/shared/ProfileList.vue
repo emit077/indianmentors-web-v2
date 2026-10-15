@@ -21,7 +21,7 @@ const props = defineProps<{
                 <v-progress-circular :model-value="70" :rotate="180" :size="58" :width="5" color="primary">
                   <v-avatar size="50" color="secondary" variant="flat">
                     <span class="text-body-1 font-weight-bold">
-                      {{ (props.data.user.name || 'M').charAt(0).toUpperCase() }}
+                      {{ (props.data.user.full_name || 'M').charAt(0).toUpperCase() }}
                     </span>
                   </v-avatar>
                 </v-progress-circular>
@@ -34,13 +34,15 @@ const props = defineProps<{
                 <div class="flex-grow-1" style="min-width: 0">
                   <div class="d-flex align-center text-subtitle-1">
                     <div class="text-subtitle-1 font-weight-medium text-truncate" style="max-width: 90%">
-                      {{ props.data.user.name }}
+                      {{ props.data.user.full_name }}
                     </div>
                     <v-icon :icon="mdiCheckDecagram" color="success" />
                   </div>
 
-                  <p class="text-caption text-lightText font-weight-medium my-2 d-block">#{{ props.data.student_id }}</p>
-                  <div class="text-caption">{{ props.data.class_name }} - {{ props.data.board_name?.toUpperCase() }}</div>
+                  <p class="text-caption text-lightText font-weight-medium my-2 d-block">#{{ props.data.student_id }}
+                  </p>
+                  <div class="text-caption">{{ props.data.class_name }} - {{ props.data.board_name?.toUpperCase() }}
+                  </div>
                   <p class="text-caption my-2">{{ props.data.signup_date }}</p>
                 </div>
               </div>

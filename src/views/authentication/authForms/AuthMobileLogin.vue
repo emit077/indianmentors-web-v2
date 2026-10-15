@@ -3,13 +3,15 @@ import { ref } from 'vue';
 import { api } from '@/utils/api/axios';
 import URLS from '@/utils/urls';
 import MobileInputField from '@/components/shared/MobileInputField.vue';
+import AuthSnackbar from '@/components/shared/AuthSnackbar.vue';
+import { useAuthSnackbar } from '@/composables/useAuthSnackbar';
 
 const form = ref();
 const mobileNumber = ref('');
 const countryId = ref<number | null>(null);
 const dialingCode = ref('');
 const loading = ref(false);
-const errorMessage = ref('');
+const { visible, message, type, showError } = useAuthSnackbar();
 
 const $emit = defineEmits<{
   otpSent: [mobileNumber: string, otpToken: string, dialingCode: string];
@@ -20,14 +22,12 @@ async function handleMobileLogin() {
   if (!result?.valid) return;
 
   loading.value = true;
-  errorMessage.value = '';
   try {
     const response = await api.post(URLS.USER_LOGIN, { mobile: mobileNumber.value.trim() }, { returnResponse: true });
     const otpToken = response.headers['OTP_TOKEN'] || response.headers['otp_token'] || response.headers['otp-token'];
     $emit('otpSent', mobileNumber.value.trim(), String(otpToken ?? ''), dialingCode.value);
   } catch (error: any) {
-    errorMessage.value =
-      error.response?.data?.message || error.response?.data?.detail || 'Could not send the code. Please try again.';
+    showError(error.response?.data?.message || error.response?.data?.detail || 'Could not send the code. Please try again.');
   } finally {
     loading.value = false;
   }
@@ -50,9 +50,7 @@ async function handleMobileLogin() {
         Continue
       </v-btn>
 
-      <v-alert v-if="errorMessage" color="error" class="mt-4" closable @click:close="errorMessage = ''">
-        {{ errorMessage }}
-      </v-alert>
     </v-form>
+    <AuthSnackbar v-model="visible" :message="message" :type="type" />
   </div>
 </template>

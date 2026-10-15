@@ -93,7 +93,7 @@ function handleBack() {
               <v-col cols="12" md="5" class="bg-primary d-none d-md-block">
                 <div class="h-100 d-flex flex-column">
                   <div class="signup-side h-100 d-flex flex-column pa-6 pa-md-8 pb-md-0" :style="{
-                    backgroundImage: `linear-gradient(to top, rgb(var(--v-theme-primary800)) 0%, rgb(var(--v-theme-primary)) 15%, rgba(var(--v-theme-primary), 0.15) 68%), url(${mentorSignupImage})`
+                    backgroundImage: `linear-gradient(to top, rgb(var(--v-theme-primary800)) 0%, rgb(var(--v-theme-primary)) 20%, rgba(var(--v-theme-primary), 0.15) 68%), url(${mentorSignupImage})`
                   }">
                     <div class="d-none d-md-flex flex-column ga-4 mt-auto py-6">
                       <div v-for="item in highlights" :key="item.title" class="d-flex align-center ga-3">
@@ -111,7 +111,7 @@ function handleBack() {
               </v-col>
             </v-row>
           </v-card>
-          <p class="text-body-1 d-block mt-4 d-md-none text-center">
+          <p v-if="currentStep === 1" class="text-body-1 d-block mt-4 d-md-none text-center">
             Already have an account?
             <router-link to="/auth/login" class="text-primary text-decoration-underline font-weight-bold">
               Sign in
