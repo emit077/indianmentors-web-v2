@@ -17,6 +17,16 @@
 .scrollnavbar {
   height: calc(100vh - 100px);
 
+  &--native {
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .v-list-item {
+    touch-action: manipulation;
+  }
+
   .v-list-subheader {
     font-weight: 600;
   }
@@ -245,5 +255,23 @@
         opacity: 1;
       }
     }
+  }
+}
+
+// A :hover rule that changes a link makes iOS wait for a second tap.
+@media (hover: none) and (pointer: coarse) {
+  .leftSidebar {
+    .v-list-item:hover > .v-list-item__overlay {
+      opacity: 0;
+    }
+
+    .v-list-item--active:hover > .v-list-item__overlay,
+    .v-list-item[aria-haspopup='menu'][aria-expanded='true']:hover > .v-list-item__overlay {
+      opacity: calc(var(--v-activated-opacity) * var(--v-theme-overlay-multiplier));
+    }
+  }
+
+  .scrollnavbar .v-list > .v-list-group > .v-list-item:hover:not(.v-list-item--active) {
+    background: transparent;
   }
 }
